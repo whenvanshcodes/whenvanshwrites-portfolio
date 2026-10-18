@@ -1,0 +1,1 @@
+import{existsSync,writeFileSync}from'node:fs';if(!existsSync('.dev.vars'))writeFileSync('.dev.vars','NEXTJS_ENV=development\nOWNER_EMAIL="seedy@sites.test"\n');console.log('Next.js local configuration ready. Run pnpm run build, pnpm run db:local, then pnpm dev. Open http://localhost:3000/local-owner for local-only editing.');

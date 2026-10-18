@@ -1,0 +1,25 @@
+'use client';
+import {useCallback,useEffect,useRef,useState,type ComponentType} from 'react';
+import {usePortfolioTheme} from './use-portfolio-theme';
+type Mode='professional'|'fun';
+type WorkProps={active:boolean;onExplore:()=>void;onChoose:()=>void};
+type VillageProps={onReady?:()=>void;onError?:()=>void};
+declare global{interface Window{__portfolioEntryManaged?:boolean;}}
+export default function PortfolioEntry(){const[night,toggleTheme]=usePortfolioTheme();
+ const[mode,setMode]=useState<Mode|null>(null),[pending,setPending]=useState<Mode|null>(null),[error,setError]=useState('');
+ const[Work,setWork]=useState<ComponentType<WorkProps>|null>(null),[Village,setVillage]=useState<ComponentType<VillageProps>|null>(null),[villageReady,setVillageReady]=useState(false),[villageFailed,setVillageFailed]=useState(false);
+ const entry=useRef<HTMLHeadingElement>(null);
+ const choose=useCallback(async(next:Mode)=>{setError('');setPending(next);window.__portfolioEntryManaged=true;window.dispatchEvent(new Event('lab:park'));
+  try{if(next==='professional'&&!Work){const module=await import('./professional-work');setWork(()=>module.default);}if(next==='fun'&&!Village){const module=await import('./portfolio-shell');setVillage(()=>module.default);}setMode(next);setPending(null);}catch{setPending(null);setError('This view couldn’t load. Check your connection and try again.');}
+ },[Work,Village]);
+ const showChoice=useCallback(()=>{window.dispatchEvent(new Event('lab:park'));setMode(null);setPending(null);},[]);
+ const ready=useCallback(()=>setVillageReady(true),[]);const failed=useCallback(()=>setVillageFailed(true),[]);
+ useEffect(()=>{const listener=(event:Event)=>{const next=(event as CustomEvent).detail;if(next==='professional'||next==='fun')void choose(next);};window.addEventListener('lab:navigate',listener);return()=>window.removeEventListener('lab:navigate',listener);},[choose]);
+ useEffect(()=>{document.body.classList.toggle('professional-mode',mode==='professional');document.body.classList.toggle('entry-choice-open',mode===null);if(mode===null)entry.current?.focus({preventScroll:true});if(mode==='fun'){window.dispatchEvent(new Event('lab:theme'));window.dispatchEvent(new Event('resize'));}},[mode]);
+ return <>
+  {Work&&<div hidden={mode!=='professional'}><Work active={mode==='professional'} onExplore={()=>void choose('fun')} onChoose={showChoice}/></div>}
+  {Village&&<div hidden={mode!=='fun'}><Village onReady={ready} onError={failed}/></div>}
+  {mode===null&&<main className={"entry-gate"+(night?" folio-night":"")}><header><span>VANSH BHATI</span><div className="entry-utilities"><span>DATA / BUSINESS / STARTUPS</span><button className="entry-theme-toggle" onClick={toggleTheme} aria-label={night?'Switch to light mode':'Switch to dark mode'}>{night?'☼ Light':'☾ Dark'}</button></div></header><div className="entry-intro"><span className="entry-kicker">A PORTFOLIO WITH TWO WAYS IN</span><h1 ref={entry} tabIndex={-1}>How would you<br/>like to <em>meet me?</em></h1><p>The same person. Two different perspectives.</p></div><div className="entry-paths"><button disabled={!!pending} onClick={()=>void choose('professional')} className="entry-path entry-work"><span className="entry-path-number">01 / THE DIRECT ROUTE</span><div className="entry-paper" aria-hidden="true"><i/><i/><i/><b>VB.</b></div><strong>See the work.</strong><p>Selected projects, how I think,<br/>and what I can help you solve.</p><span className="entry-route">{pending==='professional'?'Opening the work…':'View my work'}<span aria-hidden="true">↗</span></span></button><button disabled={!!pending} onClick={()=>void choose('fun')} className="entry-path entry-world"><span className="entry-path-number">02 / THE SCENIC ROUTE</span><svg className="entry-route-sketch" viewBox="0 0 220 100" fill="none" aria-hidden="true"><path d="M8 80C35 8 78 101 104 46S175 5 212 53" stroke="currentColor" strokeWidth="2" strokeDasharray="5 5"/><path d="m130 40 22-18 22 18v32h-44z" stroke="currentColor" strokeWidth="2"/><path d="M148 72V51h11v21M138 43h7v8h-7z" stroke="currentColor"/><rect x="37" y="46" width="20" height="11" rx="4" fill="currentColor" transform="rotate(20 37 46)"/></svg><strong>Enter my world.</strong><p>A living village, curious corners,<br/>and a car you can take for a spin.</p><span className="entry-route">{pending==='fun'?'Opening the village…':'Explore the village'}<span aria-hidden="true">↗</span></span></button></div><div className="entry-status" role="status" aria-live="polite">{error|| (pending?'Opening your chosen experience…':'Choose a route. You can switch at any time.')}</div><footer><span>ANALYST. BUILDER. WRITER.</span><span>BASED IN INDORE, INDIA</span></footer></main>}
+  {mode==='fun'&&!villageReady&&<div className={"experience-loading"+(night?" folio-night":"")} role="status"><span>THE CURIOUS OPERATOR’S LAB</span><h2>A little world<br/>is taking shape.</h2><p>{villageFailed?"The village couldn’t finish loading. Check your connection and reload.":"Preparing the village you chose…"}</p>{villageFailed&&<button onClick={()=>window.location.reload()}>Reload portfolio ↻</button>}</div>}
+ </>;
+}

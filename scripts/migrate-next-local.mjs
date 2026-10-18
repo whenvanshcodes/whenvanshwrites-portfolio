@@ -1,0 +1,1 @@
+import{spawnSync}from'node:child_process';const r=spawnSync(process.execPath,['node_modules/wrangler/bin/wrangler.js','d1','migrations','apply','DB','--local','--config','wrangler.jsonc','--persist-to','.wrangler/state'],{stdio:'inherit',env:{...process.env,WRANGLER_SEND_METRICS:'false'}});if(r.error)throw r.error;process.exitCode=r.status??1;

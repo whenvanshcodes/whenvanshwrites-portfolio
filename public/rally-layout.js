@@ -1,0 +1,8 @@
+'use strict';
+// Keep mode navigation in the same flow as the destination controls.
+const modeButton=document.getElementById('view-switch'),destinationNav=document.querySelector('.destination-nav');destinationNav.append(modeButton);
+const aboutButton=document.getElementById('profile-open');document.querySelector('.world-caption').prepend(aboutButton);
+const brakeButton=document.createElement('button');brakeButton.dataset.driveKey='brake';brakeButton.className='brake-button';brakeButton.setAttribute('aria-label','Brake');brakeButton.textContent='Brake';document.querySelector('.pedal-pad').prepend(brakeButton);brakeButton.addEventListener('pointerdown',e=>{e.preventDefault();driveKeys.add('brake');brakeButton.setPointerCapture(e.pointerId);brakeButton.classList.add('pressed');});for(const name of ['pointerup','pointercancel','lostpointercapture'])brakeButton.addEventListener(name,()=>{driveKeys.delete('brake');brakeButton.classList.remove('pressed');});
+const lapClock=document.createElement('span');lapClock.id='live-lap-clock';lapClock.setAttribute('aria-live','off');document.querySelector('.drive-telemetry').after(lapClock);
+const circuitHud=updateDriveHud;updateDriveHud=function(){circuitHud();const racing=rallyState.mode==='race';lapClock.hidden=!racing;if(racing)lapClock.textContent='This lap '+(rallyState.elapsed-rallyState.lapStartedAt).toFixed(2)+'s'+(rallyState.bestLap?' · Best lap '+rallyState.bestLap.toFixed(2)+'s':'');else if(innerWidth<=700&&!document.getElementById('drive-destination').value)document.getElementById('drive-tip').textContent='Hold ↑ to drive · ← → steer · Brake slows down · ⚡ boosts';};
+if('ResizeObserver' in window)new ResizeObserver(()=>resize()).observe(viewport);resize();

@@ -1,0 +1,3 @@
+/* Shared by the entry, professional portfolio, village, game and owner studio. */
+:root,.entry-gate,.experience-loading,.folio-editorial,.admin-vansh{--fe-paper:#f4f7fb;--fe-ink:#102237;--fe-muted:#4d6075;--fe-line:#c4cfdd;--fe-accent:#1d4ed8;--fe-sage:#e1ebfa;--fe-blue:#e6eef7;--fe-raised:#ffffff;}
+body.night,.folio-night{--fe-paper:#0c1422;--fe-ink:#e6edf7;--fe-muted:#a5b6cb;--fe-line:#344258;--fe-accent:#73b9ff;--fe-sage:#142b48;--fe-blue:#17283d;--fe-raised:#111e30}

@@ -1,0 +1,9 @@
+{
+  "owner": {
+    "username": "INSERT_YOUR_GITHUB_USERNAME",
+    "email": "vanshbhati522@gmail.com"
+  },
+  "records": {
+    "TXT": "vc-domain-verify=whenvanshwrites.is-a.dev,PASTE_EXACT_VERCEL_TOKEN_FROM_DASHBOARD"
+  }
+}

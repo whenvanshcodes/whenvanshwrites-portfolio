@@ -1,0 +1,19 @@
+/* Screens remain uncropped, with captions outside the image in both themes. */
+.project-cover-figure{margin:0;width:100%;min-width:0;align-self:center}
+.project-cover-figure .project-cover-shot{width:100%;height:auto;max-height:380px;object-fit:contain;border-radius:8px 8px 0 0;background:#fff}
+.project-cover-figure figcaption{font:8px/1.7 var(--mono);letter-spacing:.6px;padding:10px 12px;color:var(--pro-muted,#52664b);background:var(--case-panel,#edf1e2)}
+.professional-project-preview{margin:0 0 4px;border:1px solid var(--pro-border,#bdcbae);border-radius:8px;overflow:hidden;width:100%;background:#fff}
+.professional-project-preview img{display:block;width:100%;height:auto;aspect-ratio:8/5;object-fit:contain;background:#fff}
+.professional-project-preview figcaption{font:8px/1.7 var(--mono);letter-spacing:.6px;padding:8px 11px;background:#edf1e2;color:#52664b;border-top:1px solid var(--pro-border,#bdcbae)}
+#notebook .gallery-preview-note{font:12px/1.8 var(--font);max-width:640px;margin:10px 0 20px}
+#notebook .gallery-editorial .screenshot-grid img{display:block;width:100%;height:auto;aspect-ratio:8/5;object-fit:contain;background:#fff;border:0;border-bottom:1px solid var(--case-border,#bdcbae);border-radius:0}
+#notebook .gallery-editorial .screenshot-grid button:first-child img{aspect-ratio:auto;max-height:440px;object-fit:contain}
+#notebook .gallery-editorial .screenshot-grid button{min-width:0;transition:box-shadow .2s,border-color .2s}
+#notebook .gallery-editorial .screenshot-grid button:hover{border-color:var(--case-accent,#4d653b);box-shadow:0 4px 14px #182d2015}
+#notebook .preview-kind{display:block;font:10px/1.7 var(--mono);margin:8px 0 0;color:var(--case-muted,#52664b)}
+#notebook .screenshot-full{background:#fff;height:auto;border:1px solid var(--case-border,#bdcbae)}
+.night .project-cover-figure figcaption,.night .professional-project-preview figcaption{background:#2c4043;color:#cbd6c4}
+.night #notebook .screenshot-grid>button{background:var(--case-panel);border-color:var(--case-border)}
+.night #notebook .screenshot-grid span,.night #notebook .preview-kind{color:var(--case-text)}
+@media(max-width:700px){#notebook .gallery-editorial .screenshot-grid{grid-template-columns:minmax(0,1fr)}#notebook .gallery-editorial .screenshot-grid button:first-child{grid-column:auto}.project-cover-figure .project-cover-shot{max-height:none}#notebook .photo-nav{gap:10px}#notebook .photo-nav button{min-width:44px;min-height:44px}.professional-project-preview img{aspect-ratio:auto}}
+@media(prefers-reduced-motion:reduce){#notebook .gallery-editorial .screenshot-grid button{transition:none}}

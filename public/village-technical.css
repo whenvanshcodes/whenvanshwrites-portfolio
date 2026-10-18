@@ -1,0 +1,128 @@
+/* The village uses the same tokens and type as the professional portfolio.
+   This sheet loads after the legacy art/layout sheets; geometry stays intact. */
+body,body.night{--bg:var(--fe-paper);--paper:var(--fe-raised);--ink:var(--fe-ink);--muted:var(--fe-muted);--line:var(--fe-line);--sage:var(--fe-accent);--design-accent:var(--fe-accent);--design-readable:var(--fe-muted);--font:'Space Grotesk','DM Sans',sans-serif;--serif:'Space Grotesk','DM Sans',sans-serif;--mono:'DM Mono',monospace;background:var(--fe-paper);color:var(--fe-ink)}
+body #portfolio-root{font-family:var(--font);color:var(--fe-ink)}
+body #portfolio-root ::selection{background:var(--fe-sage);color:var(--fe-ink)}
+body #portfolio-root :is(button,a,summary,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--fe-accent);outline-offset:4px}
+body #portfolio-root :is(button,input,select,textarea){font-family:var(--font);accent-color:var(--fe-accent)}
+body #portfolio-root :is(h1,h2,h3,h4,strong,em){font-family:var(--font);font-style:normal}
+body #portfolio-root :is(.world-header h2,.name-row h1,.word-heading h2,.modal-body h2){font-weight:500}
+body #portfolio-root :is(.profile,.drive-hud,.zoom-controls,.round-button,.sky-toggle,.mobile-about,.back-to-top,.arrival-note,.pixel-hint,.landmark-hint,.landmark-plaque,.destination-nav label,.destination-start,.view-switch,.contact,.passport-button,.editor-entry,.garden-owner-button){background:var(--fe-raised);color:var(--fe-ink);border-color:var(--fe-line);box-shadow:0 5px 20px #07111f0d;backdrop-filter:none}
+body #portfolio-root .profile{border-radius:12px}
+body #portfolio-root .profile-scope{color:var(--fe-muted)}
+body #portfolio-root .profile-fast-links button{background:var(--fe-raised);color:var(--fe-ink);border-color:var(--fe-line)}
+body #portfolio-root .profile-fast-links button:first-child{background:var(--fe-accent);color:var(--fe-paper);border-color:var(--fe-accent)}
+body #portfolio-root .quick-rooms button:first-child{background:var(--fe-sage);border-color:var(--fe-line)}
+body #portfolio-root :is(.profile-foot,.profile-tags span,.profile-divider,.world-caption,.word-footer,.visitor-notebook,.note-board,.word-garden,.word-bottom,.word-play-help,.reason-switch,.boost-track){border-color:var(--fe-line)}
+body #portfolio-root :is(.profile-bio,.profile-bio.secondary,.portrait-note,.profile-foot,.profile-divider,.quick-rooms small,.quick-rooms b,.socials,.map-guide small,.world-caption,.eyebrow,.profile-tags,.landmark-plaque small,.landmark-plaque>i,.map-label,.word-heading p,.word-play-help,.word-bottom,.notebook-intro small,.notebook-toolbar,.reason-suggestions small){color:var(--fe-muted)}
+body #portfolio-root :is(.name-row h1 em,.world-header em,.heading-star,.brand-mark,.map-guide strong,.guide-icon,.tiny-star,.landmark-plaque b,.word-heading h2 em,.notebook-intro h2 em,.profile-approach,.world-caption button,.socials a,.delight-links button){color:var(--fe-accent);font-style:normal}
+body #portfolio-root :is(.profile-tagline,.notebook-intro>div>p,.world-header h2,.word-heading h2,.notebook-intro h2){color:var(--fe-ink)}
+body #portfolio-root :is(.map-guide strong,.portrait-note,.landmark-hint,.notebook-empty,.visitor-note p,.world-caption button){font-style:normal;font-family:var(--font)}
+body #portfolio-root .quick-rooms button{min-height:40px;font-size:12px}
+body #portfolio-root .quick-rooms small{font-size:9px}
+body #portfolio-root :is(.quick-rooms button:hover,.quick-rooms button.active,.quick-room-featured){background:var(--fe-sage);color:var(--fe-accent);border-color:var(--fe-line)}
+body #portfolio-root .online-dot{background:var(--fe-accent);box-shadow:0 0 0 4px #4b98ed18}
+body #portfolio-root .world-main,body.night #portfolio-root .world-main{background:var(--fe-paper);filter:none}
+body #portfolio-root .viewport{background:var(--fe-blue);border-color:var(--fe-line);box-shadow:inset 0 0 0 1px var(--fe-line)}
+body #portfolio-root #world-art{filter:none}
+body.night #portfolio-root #world-art{filter:brightness(.68) saturate(.75) hue-rotate(8deg)}
+body #portfolio-root .landmark-plaque{border-radius:5px;background:var(--fe-raised);box-shadow:0 3px 0 #07111f18}
+body #portfolio-root .landmark-plaque>span{font-family:var(--font);font-weight:500;font-style:normal}
+body #portfolio-root .landmark:is(:hover,:focus-visible) .landmark-plaque{background:var(--fe-sage);border-color:var(--fe-accent);color:var(--fe-ink);box-shadow:0 5px 12px #07111f18}
+body #portfolio-root .landscape text{font-family:var(--font)}
+body #portfolio-root :is(.round-button:hover,.zoom-controls button:hover,.contact:hover,.sky-toggle:hover,.view-switch:hover,.passport-button:hover,.editor-entry:hover){background:var(--fe-sage);color:var(--fe-accent)}
+body #portfolio-root .sky-icon{background:var(--fe-sage)}
+body.night #portfolio-root .sky-icon{background:var(--fe-paper)}
+body #portfolio-root .sky-toggle{font-family:var(--font)}
+/* Project windows: accent headings and distinct, high-contrast answers. */
+body #portfolio-root dialog,body.night #portfolio-root dialog{--case-text:var(--fe-ink);--case-muted:var(--fe-muted);--case-accent:var(--fe-accent);--case-panel:var(--fe-raised);--case-media:var(--fe-blue);--case-border:var(--fe-line);background:var(--fe-paper);color:var(--fe-ink);border-color:var(--fe-line);border-radius:8px;color-scheme:light}
+body.night #portfolio-root dialog{color-scheme:dark}
+body #portfolio-root dialog::backdrop{background:#07111fcc;backdrop-filter:blur(5px)}
+body #portfolio-root dialog :is(.dialog-top,.close-button){background:var(--fe-raised);color:var(--fe-ink);border-color:var(--fe-line)}
+body #portfolio-root dialog :is(p,li,dd,.modal-intro,.case-ownership,.screenshot-empty,.project-glance dd,.evidence-note,.signal-journey li span){color:var(--fe-ink);font-size:14px;line-height:1.85}
+body #portfolio-root dialog :is(h2,strong,b){color:var(--fe-ink)}
+body #portfolio-root dialog :is(h3,h4,dt,.eyebrow,.exp-tag,.case-facts dt,.modal-block h3,.outcome-box h3,.project-glance dt){color:var(--fe-accent)}
+body #portfolio-root dialog :is(h3,h4){font-weight:500}
+body #portfolio-root dialog :is(.modal-tags span,.case-snapshot,.real-gallery,.outcome-box,.signal-journey,.gallery-pending,.room-list>button,.star-card,.star-card.featured,.thinking-board,.evolution-note,.failure-note,.thinking-trio article,.room-thinking,.demo-metrics>div,.tour-proof,.visit-stamps button,.practice-guide){background:var(--fe-raised);color:var(--fe-ink);border-color:var(--fe-line);box-shadow:none}
+body #portfolio-root dialog :is(.modal-block,.pm-story,.case-next-action,.design-tradeoff,.signal-journey li,.thinking-case,.thinking-detail,.case-thinking-drawer,.race-community,.garage-extras,.lap-results li){border-color:var(--fe-line)}
+body #portfolio-root dialog .modal-block>p,body #portfolio-root dialog .thinking-detail[open]>p,body #portfolio-root dialog .thinking-board dd{background:var(--fe-raised);color:var(--fe-ink);border-left:3px solid var(--fe-accent);padding:16px 20px;border-radius:0 4px 4px 0}
+body #portfolio-root dialog :is(.project-tools button,.project-tools a,.case-index button,.thinking-tools button,.thinking-tabs button,.real-gallery>button,.race-community button,.back-room,.tool-row button){background:var(--fe-raised);color:var(--fe-accent);border-color:var(--fe-line);min-height:44px}
+body #portfolio-root dialog :is(.room-list>button:hover,.star-card:hover,.thinking-tools button:hover,.thinking-tabs [aria-pressed=true]){background:var(--fe-sage);border-color:var(--fe-accent)}
+body #portfolio-root dialog :is(.room-list strong,.star-card strong){font-family:var(--font);font-weight:500}
+body #portfolio-root dialog :is(.screenshot-grid img,.screenshot-full,.project-cover-shot){background:#fff;border-color:var(--fe-line)}
+body #portfolio-root dialog :is(.screenshot-grid span,.case-facts dt,.modal-tags span){font-size:11px}
+body #portfolio-root dialog .case-editorial:before{border-color:var(--fe-line)}
+body #portfolio-root :is(summary,.garage-extras summary){color:var(--fe-muted);min-height:44px}
+body #portfolio-root details[open]>summary{color:var(--fe-accent);font-weight:500}
+body #portfolio-root :is(input:not([type=checkbox]):not([type=range]):not([type=color]),textarea,select){background:var(--fe-raised);color:var(--fe-ink);border-color:var(--fe-line);color-scheme:light}
+body.night #portfolio-root :is(input,textarea,select){color-scheme:dark}
+body #portfolio-root :is(input,textarea)::placeholder{color:var(--fe-muted);opacity:1}
+body #portfolio-root :is(.modal-link,.pro-primary,.profile-actions a:first-child,.profile-actions button:first-child,.notebook-intro button[type=submit],.word-input-row button[type=submit]){background:var(--fe-accent);border-color:var(--fe-accent);color:var(--fe-paper);border-radius:5px;min-height:44px}
+/* Race HUD and driving controls share the portfolio UI; the illustration stays playable. */
+body #portfolio-root :is(.drive-topline,.drive-telemetry>span,#drive-tip,#live-lap-clock,#ghost-delta,#race-context,.destination-select,.drive-idle small){color:var(--fe-muted)}
+body #portfolio-root :is(.drive-idle strong,.drive-telemetry strong,.drive-telemetry strong small){font-family:var(--font);color:var(--fe-ink)}
+body #portfolio-root :is(.drive-wheel,#start-driving,#stop-driving,.drive-actions button,#park-enter,#rally-mini,#race-banner){background:var(--fe-raised);color:var(--fe-ink);border-color:var(--fe-line);box-shadow:none}
+body #portfolio-root :is(#start-driving,#park-enter,.drive-actions button:not(:disabled)){color:var(--fe-accent)}
+body #portfolio-root #race-banner{border:1px solid var(--fe-line);border-radius:8px;font-family:var(--font);text-shadow:none}
+body #portfolio-root .boost-track{background:var(--fe-blue)}
+body #portfolio-root .boost-track>i{background:var(--fe-accent)}
+body #portfolio-root .driving-pad button{background:var(--fe-raised);color:var(--fe-ink);border-color:var(--fe-line);box-shadow:0 3px 0 var(--fe-line)}
+body #portfolio-root .driving-pad :is(.pressed,button:active,.gas-button){background:var(--fe-accent);color:var(--fe-paper);border-color:var(--fe-accent)}
+/* Earlier pedal styles used !important, so these two pairs must win explicitly. */
+body #portfolio-root .driving-pad .brake-button{background:var(--fe-sage)!important;color:var(--fe-ink)!important;border-color:var(--fe-line)}
+body #portfolio-root .driving-pad .brake-button:is(.pressed,:active){background:var(--fe-accent)!important;color:var(--fe-paper)!important}
+body #portfolio-root .mini-track{stroke:var(--fe-muted)}
+body #portfolio-root .mini-next{stroke:var(--fe-accent)}
+body #portfolio-root .mini-player{fill:var(--fe-accent);stroke:var(--fe-raised)}
+body #portfolio-root #circuit-finish span{color:var(--fe-ink);font-family:var(--mono)}
+/* Notes and words remain draggable, with the same readable light/dark surfaces. */
+body #portfolio-root .word-footer{background:var(--fe-paper);color:var(--fe-ink)}
+body #portfolio-root .visitor-notebook{background:transparent;color:var(--fe-ink)}
+body #portfolio-root :is(.word-heading label,.word-heading #word-status,.notebook-status,.notebook-empty,.note-grip span){color:var(--fe-muted)}
+body #portfolio-root .place-tooltip{background:var(--fe-raised);color:var(--fe-ink);border-color:var(--fe-line);font-family:var(--font);box-shadow:0 5px 20px #07111f20}
+body #portfolio-root .place-tooltip strong{color:var(--fe-accent);font-family:var(--font)}
+body #portfolio-root .place-tooltip span{color:var(--fe-muted)}
+body #portfolio-root :is(.visitor-note,.garden-word){background:var(--fe-sage);color:var(--fe-ink);border-color:var(--fe-line);box-shadow:0 3px 0 #07111f12}
+body #portfolio-root .visitor-note :is(p,button){color:var(--fe-ink);font-family:var(--font);font-style:normal}
+body #portfolio-root :is(.word-garden button,.word-play-help button,.notebook-toolbar button,.notebook-more,.note-remove){color:var(--fe-accent);border-color:var(--fe-line)}
+body #portfolio-root #toast{background:var(--fe-raised);color:var(--fe-ink);border-color:var(--fe-line);font:13px/1.7 var(--font)}
+body #portfolio-root .tour-dots .active{background:var(--fe-accent)}
+body #portfolio-root .tour-dots span{background:var(--fe-line)}
+/* The older case-study stylesheet uses ID selectors: bind it to these tokens too. */
+body #portfolio-root #notebook{--case-text:var(--fe-ink);--case-muted:var(--fe-muted);--case-accent:var(--fe-accent);--case-panel:var(--fe-raised);--case-media:var(--fe-blue);--case-border:var(--fe-line);background:var(--fe-paper);color:var(--fe-ink)}
+body #portfolio-root #notebook .case-editorial :is(p,li,dd,.modal-intro,.case-ownership,.screenshot-empty,.signal-journey li span){color:var(--fe-ink)}
+body #portfolio-root #notebook .case-editorial :is(h3,h4,.modal-block h3,.outcome-box h3,.case-facts dt){color:var(--fe-accent)}
+body #portfolio-root #notebook :is(.modal-link,.pro-primary){background:var(--fe-accent);color:var(--fe-paper);border-color:var(--fe-accent)}
+body #portfolio-root #notebook .dialog-top{background:var(--fe-raised);color:var(--fe-ink);border-color:var(--fe-line)}
+body #portfolio-root #notebook .close-button{color:var(--fe-ink);border-color:var(--fe-line)}
+/* Footer aligns with the map column, not beneath the fixed desktop profile. */
+body:not(.professional-mode) #portfolio-root>.word-footer{margin-left:var(--map-gutter);width:calc(100% - var(--map-gutter));position:relative;inset:auto;box-shadow:none;border-radius:0}
+body #portfolio-root .word-garden{background:var(--fe-blue);border-color:var(--fe-line)}
+body #portfolio-root #word-empty{color:var(--fe-muted);font-style:normal}
+body #portfolio-root .paper-grain{display:none}
+body #portfolio-root .sky-atmosphere{position:absolute;inset:0;z-index:2}
+body #portfolio-root #notebook .screenshot-grid>button{background:var(--fe-raised);border-color:var(--fe-line);color:var(--fe-ink)}
+body #portfolio-root #notebook .screenshot-grid :is(span,p,.preview-kind){color:var(--fe-ink);background:var(--fe-raised)}
+body #portfolio-root #visitor-notebook-root>.instagram-feed{margin:0 35px}
+body #portfolio-root .instagram-feed :is(h2,p){font-family:var(--font)}
+body #portfolio-root .instagram-feed h2{color:var(--fe-ink)}
+body #portfolio-root .instagram-feed .instagram-kicker,body #portfolio-root .instagram-feed a{color:var(--fe-accent)}
+body #portfolio-root .instagram-feed .instagram-actions button{background:var(--fe-accent);color:var(--fe-paper);border-color:var(--fe-accent)}
+@media(max-width:700px){body:not(.professional-mode) #portfolio-root>.word-footer{margin-left:0;width:100%}body #portfolio-root #visitor-notebook-root>.instagram-feed{margin:0 24px}}
+@media(prefers-reduced-motion:reduce){body #portfolio-root :is(.profile,.drive-hud,.landmark-plaque,.world-main,dialog,#world-art){transition:none}}
+
+/* Photographic identity, with a technical frame instead of the cartoon avatar. */
+body #portfolio-root .profile .portrait-wrap{margin:24px 0 19px;padding:0}
+body #portfolio-root .portrait-frame{position:relative;width:min(100%,210px);height:204px;margin:auto;isolation:isolate;border:1px solid var(--fe-line);border-radius:8px;background-color:var(--fe-blue);background-image:linear-gradient(var(--fe-line) 1px,transparent 1px),linear-gradient(90deg,var(--fe-line) 1px,transparent 1px);background-size:22px 22px;box-shadow:7px 7px 0 var(--fe-sage)}
+body #portfolio-root .portrait-frame:before{content:'';position:absolute;inset:9px;border:1px solid var(--fe-accent);border-radius:4px;opacity:.3;z-index:-1}
+body #portfolio-root .profile .portrait-frame .portrait-cutout,body #portfolio-root .profile .portrait-frame .real-portrait{position:absolute;inset:auto 0 0;width:100%;height:216px;max-width:none;margin:0;object-fit:contain;object-position:center bottom;border:0;border-radius:0;box-shadow:none;filter:drop-shadow(0 3px 3px #07111f16)}
+body #portfolio-root .profile .portrait-wrap.has-real-portrait .portrait-cutout{display:none}
+body #portfolio-root .profile .portrait-note{position:static;display:block;transform:none;font:8px/1.8 var(--mono);letter-spacing:.7px;text-align:center;color:var(--fe-muted);margin-top:18px}
+@media(max-width:700px){body #portfolio-root .profile .portrait-wrap{margin-top:20px}body #portfolio-root .portrait-frame{width:190px;height:184px}body #portfolio-root .profile .portrait-frame .portrait-cutout,body #portfolio-root .profile .portrait-frame .real-portrait{height:196px}}
+/* Display the supplied artwork intact: no crop, colour treatment or cutout effect. */
+body #portfolio-root .portrait-frame{height:auto;aspect-ratio:3/4;background:transparent;border:0;overflow:visible;box-shadow:none}
+body #portfolio-root .portrait-frame:before{display:none}
+body #portfolio-root .profile .portrait-frame .portrait-cutout{inset:0;width:100%;height:100%;object-fit:contain;object-position:center;filter:none}
+
+/* Driving stays quiet: controls and telemetry remain, explanatory overlays do not. */
+body.driving #portfolio-root :is(#drive-tip,#toast,.practice-guide,.checkpoint small,#rally-destination-pin small){display:none!important}
