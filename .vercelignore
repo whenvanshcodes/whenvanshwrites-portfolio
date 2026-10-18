@@ -1,0 +1,13 @@
+.next
+.sites-runtime
+.vercel
+node_modules
+tests
+drizzle
+supabase/.temp
+is-a-dev-registration
+.git
+.openai
+*.tsbuildinfo
+site-deploy.tar.gz
+*.tar.gz

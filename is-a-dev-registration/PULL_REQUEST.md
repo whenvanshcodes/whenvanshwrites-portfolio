@@ -10,7 +10,7 @@
 
 ## Website Preview
 <!-- Provide a link to your website -->
-https://whenvanshwrites.vercel.app (or your current active Vercel deployment URL)
+https://vansh-portfolio-latest-source.vercel.app
 
 ## Website Purpose
 <!-- Tell us what your website is about -->
