@@ -66,8 +66,8 @@ export async function isOwner(request: Request): Promise<boolean> {
 
     if (error || !user) return false;
 
-    const ownerUserId = process.env.SUPABASE_OWNER_USER_ID;
-    const ownerEmail = process.env.SUPABASE_OWNER_EMAIL;
+    const ownerUserId = process.env.SUPABASE_OWNER_USER_ID || process.env.OWNER_USER_ID;
+    const ownerEmail = process.env.SUPABASE_OWNER_EMAIL || process.env.OWNER_EMAIL;
 
     // Server-side verification using verified user ID
     if (ownerUserId && user.id === ownerUserId) {

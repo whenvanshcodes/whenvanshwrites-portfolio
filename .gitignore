@@ -63,3 +63,9 @@ site-deploy.tar.gz
 /.open-next/
 /.dev.vars*
 !.dev.vars.example
+
+.vercel
+.env*
+
+supabase/.temp/
+
