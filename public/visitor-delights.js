@@ -55,16 +55,26 @@ function writingLines(c,text,width){
   }
   return result;
 }
+function getWritingTypography(count){
+  if(count<=14) return {size:30,lineHeight:52,font:"30px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif"};
+  if(count<=26) return {size:25,lineHeight:42,font:"25px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif"};
+  if(count<=38) return {size:22,lineHeight:36,font:"22px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif"};
+  return {size:19,lineHeight:30,font:"19px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif"};
+}
 async function makeWritingCard(entry){
   await document.fonts?.ready;
   const canvas=document.createElement('canvas');canvas.width=1080;
   const c=canvas.getContext('2d');
-  c.font="30px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif";
+  c.font="25px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif";
+  const prelimLines=writingLines(c,entry.excerpt,900);
+  const typo=getWritingTypography(prelimLines.length);
+  c.font=typo.font;
   const body=writingLines(c,entry.excerpt,900);
   c.font="600 36px 'Space Grotesk', 'DM Sans', sans-serif";
   const title=writingLines(c,entry.title,entry.page?740:900);
   const titleHeight=title.length*44,bodyY=230+titleHeight;
-  canvas.height=Math.max(1080,bodyY+body.length*52+220);
+  const bodyHeight=body.length*typo.lineHeight;
+  canvas.height=Math.max(1080,bodyY+bodyHeight+200);
   c.fillStyle='#f4f7fb';c.fillRect(0,0,canvas.width,canvas.height);
   c.strokeStyle='#b9cce6';c.lineWidth=2;
   c.strokeRect(40,40,1000,canvas.height-80);
@@ -78,8 +88,8 @@ async function makeWritingCard(entry){
   c.fillStyle='#102237';c.font="600 36px 'Space Grotesk', 'DM Sans', sans-serif";
   title.forEach((line,i)=>c.fillText(line,90,195+i*44));
   c.strokeStyle='#e2e8f0';c.lineWidth=1.5;c.beginPath();c.moveTo(90,bodyY-30);c.lineTo(990,bodyY-30);c.stroke();
-  c.fillStyle='#1e293b';c.font="400 30px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif";
-  body.forEach((line,i)=>c.fillText(line,90,bodyY+i*52));
+  c.fillStyle='#1e293b';c.font=typo.font;
+  body.forEach((line,i)=>c.fillText(line,90,bodyY+i*typo.lineHeight));
   shareFooter(c,1080,canvas.height-150);
   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
   if(!blob)throw Error('Writing card export failed');
@@ -114,21 +124,27 @@ const previousRoom=openRoom;openRoom=function(id,...args){previousRoom(id,...arg
 
 async function sharePublishedWriting(entry){
   if(!entry?.published||!String(entry.body||'').trim())return;
-  showDialog('WHENVANSHWRITES / SHARE A WRITING',`<section class="modal-body"><p class="eyebrow">WORDS BY VANSH BHATI · TAKE A COPY WITH YOU</p><h2 id="modal-title">${escapeHtml(entry.title)}</h2><p class="form-note">Your image includes the writing, author credit and portfolio link. Longer pieces become numbered cards.</p><p id="writing-image-status" role="status">Preparing your writing…</p><img id="writing-image-preview" alt="Shareable writing card by Vansh Bhati" style="display:block;width:100%;height:auto;border-radius:12px" hidden><div class="tool-row"><button class="back-room" id="writing-image-prev" disabled>← Previous card</button><span id="writing-image-page" aria-live="polite"></span><button class="back-room" id="writing-image-next" disabled>Next card →</button></div><div class="tool-row"><button class="modal-link" id="writing-image-share" disabled>Share this image ↗</button><button class="back-room" id="writing-image-download" disabled>Download PNG ↓</button><button class="back-room" id="writing-image-back">← Back to writing</button></div></section>`);
-  const status=document.getElementById('writing-image-status'),preview=document.getElementById('writing-image-preview'),prev=document.getElementById('writing-image-prev'),next=document.getElementById('writing-image-next'),share=document.getElementById('writing-image-share'),save=document.getElementById('writing-image-download'),page=document.getElementById('writing-image-page');
+  showDialog('WHENVANSHWRITES / SHARE A WRITING',`<section class="modal-body"><p class="eyebrow">WORDS BY VANSH BHATI · TAKE A COPY WITH YOU</p><h2 id="modal-title">${escapeHtml(entry.title)}</h2><p class="form-note">Your image includes the writing, author credit and portfolio link. Longer pieces become numbered cards.</p><p id="writing-image-status" role="status">Preparing your writing…</p><img id="writing-image-preview" alt="Shareable writing card by Vansh Bhati" style="display:block;width:100%;height:auto;border-radius:12px" hidden><div class="tool-row" id="writing-image-nav"><button class="back-room" id="writing-image-prev" disabled>← Previous card</button><span id="writing-image-page" aria-live="polite"></span><button class="back-room" id="writing-image-next" disabled>Next card →</button></div><div class="tool-row"><button class="modal-link" id="writing-image-share" disabled>Share this image ↗</button><button class="back-room" id="writing-image-download" disabled>Download PNG ↓</button><button class="back-room" id="writing-image-back">← Back to writing</button></div></section>`);
+  const status=document.getElementById('writing-image-status'),preview=document.getElementById('writing-image-preview'),prev=document.getElementById('writing-image-prev'),next=document.getElementById('writing-image-next'),share=document.getElementById('writing-image-share'),save=document.getElementById('writing-image-download'),page=document.getElementById('writing-image-page'),nav=document.getElementById('writing-image-nav');
   let url=null,index=0,blob=null,busy=false;
   function release(){if(url){URL.revokeObjectURL(url);url=null;}}
   dialog.addEventListener('close',release,{once:true});
   document.getElementById('writing-image-back').onclick=()=>{release();readWriting(entry.id);};
   try{
     await document.fonts?.ready;
-    const measure=document.createElement('canvas').getContext('2d');measure.font="30px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif";
+    const measure=document.createElement('canvas').getContext('2d');
+    measure.font="25px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif";
     const all=writingLines(measure,entry.body,900),pages=[];
-    for(let i=0;i<all.length;i+=12){
-      const chunk=all.slice(i,i+12).join('\n').replace(/^\n+|\n+$/g,'');
-      if(chunk)pages.push(chunk);
+    if(all.length<=40){
+      pages.push(entry.body);
+    }else{
+      for(let i=0;i<all.length;i+=36){
+        const chunk=all.slice(i,i+36).join('\n').replace(/^\n+|\n+$/g,'');
+        if(chunk)pages.push(chunk);
+      }
     }
     if(!pages.length)pages.push(entry.body);
+    if(nav)nav.hidden=(pages.length<=1);
     const filename=()=> 'whenvanshwrites-'+(String(entry.title).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,45)||'writing')+(pages.length>1?'-card-'+(index+1):'')+'.png';
     async function render(){
       if(busy||!status.isConnected)return;busy=true;prev.disabled=next.disabled=share.disabled=save.disabled=true;
