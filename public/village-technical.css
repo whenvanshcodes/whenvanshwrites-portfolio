@@ -126,3 +126,10 @@ body #portfolio-root .profile .portrait-frame .portrait-cutout{inset:0;width:100
 
 /* Driving stays quiet: controls and telemetry remain, explanatory overlays do not. */
 body.driving #portfolio-root :is(#drive-tip,#toast,.practice-guide,.checkpoint small,#rally-destination-pin small){display:none!important}
+
+/* Idea Observatory and Writing hut card contrast */
+body #portfolio-root dialog :is(.idea-prompt,.writing-card){background:var(--fe-raised);color:var(--fe-ink);border:1px solid var(--fe-line)}
+body #portfolio-root dialog .idea-prompt{border-left:4px solid var(--fe-accent);border-radius:14px;padding:26px 30px;font-family:var(--font);font-size:24px;line-height:1.5;font-weight:400;margin:22px 0;box-shadow:0 4px 16px rgba(0,0,0,0.05);transition:opacity .15s ease,transform .15s ease}
+body #portfolio-root dialog .idea-prompt.swapping{opacity:.25;transform:translateY(3px)}
+body #portfolio-root dialog .writing-card :is(strong,p,small){color:inherit}
+body #portfolio-root dialog .writing-card :is(p,small){color:var(--fe-muted)}
