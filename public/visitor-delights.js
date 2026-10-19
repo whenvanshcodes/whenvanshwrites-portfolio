@@ -91,6 +91,52 @@ async function typewriter(){showDialog('WHENVANSHWRITES / THE TYPEWRITER',`<sect
 document.getElementById('quote-save').onclick=()=>exportWriting(false);
 document.getElementById('quote-share').onclick=()=>exportWriting(true);}reveal();}catch{const target=document.getElementById('typewriter-body');if(target)target.textContent='The writing drawer couldn’t load. Try again from the hut.';}}
 const previousRoom=openRoom;openRoom=function(id,...args){previousRoom(id,...args);if(id==='writing'){const button=document.createElement('button');button.className='typewriter-button';button.textContent='⌨ Tap the typewriter · a line to keep';button.onclick=typewriter;content.querySelector('.modal-body')?.prepend(button);}};
+
+async function sharePublishedWriting(entry){
+  if(!entry?.published||!String(entry.body||'').trim())return;
+  showDialog('WHENVANSHWRITES / SHARE A WRITING',`<section class="modal-body"><p class="eyebrow">WORDS BY VANSH BHATI · TAKE A COPY WITH YOU</p><h2 id="modal-title">${escapeHtml(entry.title)}</h2><p class="form-note">Your image includes the writing, author credit and portfolio link. Longer pieces become numbered cards.</p><p id="writing-image-status" role="status">Preparing your writing…</p><img id="writing-image-preview" alt="Shareable writing card by Vansh Bhati" style="display:block;width:100%;height:auto;border-radius:12px" hidden><div class="tool-row"><button class="back-room" id="writing-image-prev" disabled>← Previous card</button><span id="writing-image-page" aria-live="polite"></span><button class="back-room" id="writing-image-next" disabled>Next card →</button></div><div class="tool-row"><button class="modal-link" id="writing-image-share" disabled>Share this image ↗</button><button class="back-room" id="writing-image-download" disabled>Download PNG ↓</button><button class="back-room" id="writing-image-back">← Back to writing</button></div></section>`);
+  const status=document.getElementById('writing-image-status'),preview=document.getElementById('writing-image-preview'),prev=document.getElementById('writing-image-prev'),next=document.getElementById('writing-image-next'),share=document.getElementById('writing-image-share'),save=document.getElementById('writing-image-download'),page=document.getElementById('writing-image-page');
+  document.getElementById('writing-image-back').onclick=()=>readWriting(entry.id);
+  let url=null,index=0,blob=null,busy=false;
+  function release(){if(url){URL.revokeObjectURL(url);url=null;}}
+  dialog.addEventListener('close',release,{once:true});
+  try{
+    await document.fonts?.ready;
+    const measure=document.createElement('canvas').getContext('2d');measure.font='36px Space Grotesk, sans-serif';
+    const all=writingLines(measure,entry.body,900),pages=[];
+    for(let i=0;i<all.length;i+=12)pages.push(all.slice(i,i+12).join('\n'));
+    const filename=()=> 'whenvanshwrites-'+(String(entry.title).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,45)||'writing')+'-'+(index+1)+'.png';
+    async function render(){
+      if(busy||!status.isConnected)return;busy=true;prev.disabled=next.disabled=share.disabled=save.disabled=true;
+      status.textContent='Preparing card '+(index+1)+'…';
+      try{
+        const result=await makeWritingCard({title:entry.title+(pages.length>1?' · '+(index+1)+' / '+pages.length:''),excerpt:pages[index]});
+        if(!status.isConnected){release();return;}
+        blob=result;release();url=URL.createObjectURL(blob);preview.src=url;preview.hidden=false;
+        page.textContent='Card '+(index+1)+' of '+pages.length;
+        status.textContent='Ready to share. Your words and credit stay together.';
+        share.disabled=save.disabled=false;
+      }catch{status.textContent='Could not create this card. Return to the writing and try again.';}
+      finally{busy=false;prev.disabled=index===0;next.disabled=index===pages.length-1;}
+    }
+    prev.onclick=()=>{if(!busy&&index>0){index--;render();}};
+    next.onclick=()=>{if(!busy&&index<pages.length-1){index++;render();}};
+    save.onclick=()=>{if(blob){download(blob,filename());status.textContent='PNG downloaded with author credit and portfolio link.';}};
+    share.onclick=async()=>{if(!blob||busy)return;busy=true;share.disabled=save.disabled=prev.disabled=next.disabled=true;try{await shareImage(blob,filename(),entry.title+' — '+shareIdentity.name+' · '+shareIdentity.handle+' '+shareIdentity.url,status);}finally{busy=false;share.disabled=save.disabled=false;prev.disabled=index===0;next.disabled=index===pages.length-1;}};
+    await render();
+  }catch{status.textContent='Could not prepare this writing. Please return and try again.';}
+}
+const originalReadWriting=readWriting;
+readWriting=function(id){
+  originalReadWriting(id);
+  const entry=writingData.find(w=>w.id===id);
+  if(!entry?.published||!String(entry.body||'').trim())return;
+  const prose=content.querySelector('.writing-prose');if(!prose)return;
+  const actions=document.createElement('div');actions.className='tool-row';
+  const button=document.createElement('button');button.className='modal-link';button.textContent='Share this writing as an image ↗';
+  button.onclick=()=>sharePublishedWriting(entry);actions.appendChild(button);prose.after(actions);
+};
+
 // Pixel naps at home, then takes a brief walk along the courtyard when invited.
 const pixel=document.getElementById('pixel-sprite'),cat=document.getElementById('cat');let catUntil=0,catFrame=0,lastHint=-20000,hintIndex=0;const pixelHints=['Looking for the person behind this? Try the Founder’s Desk.','A minute to spare? The 60-second tour is a good first walk.','The writing hut has a typewriter. Some words are worth keeping.'];let follow={x:690,y:600};viewport.addEventListener('pointermove',e=>{if(performance.now()>catUntil)return;const r=world.getBoundingClientRect(),scale=view.fit*view.zoom;follow={x:Math.max(620,Math.min(730,(e.clientX-r.left)/scale)),y:Math.max(585,Math.min(650,(e.clientY-r.top)/scale))};});cat.addEventListener('click',()=>{if(performance.now()-lastHint<20000)return;lastHint=performance.now();toast('Pixel: '+pixelHints[hintIndex++%pixelHints.length]);follow={x:635,y:635};if(reducedMotion||paused)return;catUntil=performance.now()+6500;cancelAnimationFrame(catFrame);const start=performance.now();function stroll(now){if(now>catUntil||document.hidden||paused){pixel.setAttribute('transform','translate(690 600) scale(1.6)');cat.style.transform='';return;}const amount=Math.sin((now-start)/6500*Math.PI),dx=(follow.x-690)*amount,dy=(follow.y-600)*amount;pixel.setAttribute('transform',`translate(${690+dx} ${600+dy}) scale(1.6)`);cat.style.transform=`translate(${dx}px,${dy}px)`;catFrame=requestAnimationFrame(stroll);}catFrame=requestAnimationFrame(stroll);});
 const nap=document.createElementNS('http://www.w3.org/2000/svg','text');nap.setAttribute('x','17');nap.setAttribute('y','-20');nap.setAttribute('class','pixel-nap');nap.textContent='z';pixel.appendChild(nap);
