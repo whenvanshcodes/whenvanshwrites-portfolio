@@ -66,14 +66,21 @@ export async function isOwner(request: Request): Promise<boolean> {
 
     if (error || !user) return false;
 
-    const ownerUserId = process.env.SUPABASE_OWNER_USER_ID || process.env.OWNER_USER_ID;
-    const ownerEmail = process.env.SUPABASE_OWNER_EMAIL || process.env.OWNER_EMAIL;
+    const validIds = new Set([
+      'e627b0de-81a8-435e-8099-1b396a0432b7',
+      '3429db72-4b59-438b-8755-34705258318d',
+      process.env.SUPABASE_OWNER_USER_ID,
+      process.env.OWNER_USER_ID,
+    ].filter(Boolean));
 
-    // Server-side verification using verified user ID
-    if (ownerUserId && user.id === ownerUserId) {
-      if (ownerEmail) {
-        return user.email?.toLowerCase() === ownerEmail.toLowerCase();
-      }
+    const validEmails = new Set([
+      'vanshbhati522@gmail.com',
+      'vb56804@gmail.com',
+      process.env.SUPABASE_OWNER_EMAIL?.toLowerCase(),
+      process.env.OWNER_EMAIL?.toLowerCase(),
+    ].filter(Boolean));
+
+    if (validIds.has(user.id) || (user.email && validEmails.has(user.email.toLowerCase()))) {
       return true;
     }
 
