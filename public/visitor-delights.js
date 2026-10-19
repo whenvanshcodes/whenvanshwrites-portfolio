@@ -17,22 +17,36 @@ function passport(){showDialog('YOUR VILLAGE PASSPORT',`<section class="modal-bo
 
 const shareIdentity={name:'Vansh Bhati',handle:'@whenvanshwrites',url:'https://whenvanshcodes.is-a.dev/',label:'whenvanshcodes.is-a.dev'};
 function shareFooter(c,width,y){
-  c.save();c.fillStyle='#e1ebfa';c.fillRect(40,y,width-80,90);
-  c.fillStyle='#102237';c.font='500 23px Space Grotesk, sans-serif';
-  c.fillText(shareIdentity.name+' · '+shareIdentity.handle,60,y+34);
-  c.fillStyle='#1d4ed8';c.font='20px monospace';
-  c.fillText(shareIdentity.label,60,y+65);c.restore();
+  c.save();
+  c.fillStyle='#eef4fb';
+  if(c.roundRect){
+    c.beginPath();c.roundRect(40,y,width-80,90,12);c.fill();
+    c.strokeStyle='#cbdcf0';c.lineWidth=1;c.stroke();
+  }else{
+    c.fillRect(40,y,width-80,90);
+  }
+  c.fillStyle='#102237';c.font='600 22px "Space Grotesk", sans-serif';
+  c.fillText(shareIdentity.name,60,y+36);
+  const nameWidth=c.measureText(shareIdentity.name).width;
+  c.fillStyle='#64748b';c.font='400 18px "DM Mono", monospace';
+  c.fillText(' · '+shareIdentity.handle,60+nameWidth,y+36);
+  c.fillStyle='#1d4ed8';c.font='500 19px "DM Mono", monospace';
+  c.fillText(shareIdentity.label,60,y+68);
+  c.restore();
 }
-// Preserve paragraph breaks and wrap long words without losing any characters.
+// Preserve paragraph breaks, poetry line breaks and wrap long words without splitting Hindi conjuncts or losing characters.
 function writingLines(c,text,width){
   const result=[];
   for(const paragraph of String(text||'').replace(/\r\n?/g,'\n').split('\n')){
     if(!paragraph.trim()){result.push('');continue;}
     let line='';
     for(const word of paragraph.trim().split(/\s+/)){
+      if(!word)continue;
       if(line&&c.measureText(line+' '+word).width<=width){line+=' '+word;continue;}
       if(line){result.push(line);line='';}
-      for(const char of Array.from(word)){
+      if(c.measureText(word).width<=width){line=word;continue;}
+      const chars=typeof Intl!=='undefined'&&Intl.Segmenter?Array.from(new Intl.Segmenter(undefined,{granularity:'grapheme'}).segment(word),s=>s.segment):Array.from(word);
+      for(const char of chars){
         if(line&&c.measureText(line+char).width>width){result.push(line);line='';}
         line+=char;
       }
@@ -45,21 +59,27 @@ async function makeWritingCard(entry){
   await document.fonts?.ready;
   const canvas=document.createElement('canvas');canvas.width=1080;
   const c=canvas.getContext('2d');
-  c.font='36px Space Grotesk, sans-serif';
+  c.font="30px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif";
   const body=writingLines(c,entry.excerpt,900);
-  c.font='24px Space Grotesk, sans-serif';
-  const title=writingLines(c,entry.title,900);
-  const titleHeight=title.length*34,bodyY=210+titleHeight;
-  canvas.height=Math.max(1080,bodyY+body.length*56+220);
+  c.font="600 36px 'Space Grotesk', 'DM Sans', sans-serif";
+  const title=writingLines(c,entry.title,entry.page?740:900);
+  const titleHeight=title.length*44,bodyY=230+titleHeight;
+  canvas.height=Math.max(1080,bodyY+body.length*52+220);
   c.fillStyle='#f4f7fb';c.fillRect(0,0,canvas.width,canvas.height);
   c.strokeStyle='#b9cce6';c.lineWidth=2;
   c.strokeRect(40,40,1000,canvas.height-80);
   c.fillStyle='#1d4ed8';c.fillRect(90,90,48,4);
-  c.font='18px monospace';c.fillText('WHENVANSHWRITES / FROM THE WRITING HUT',90,140);
-  c.fillStyle='#52647a';c.font='24px Space Grotesk, sans-serif';
-  title.forEach((line,i)=>c.fillText(line,90,190+i*34));
-  c.fillStyle='#102237';c.font='36px Space Grotesk, sans-serif';
-  body.forEach((line,i)=>c.fillText(line,90,bodyY+i*56));
+  c.font="600 18px 'DM Mono', monospace";c.fillText('WHENVANSHWRITES / FROM THE WRITING HUT',90,140);
+  if(entry.page){
+    c.fillStyle='#64748b';c.font="500 16px 'DM Mono', monospace";c.textAlign='right';
+    c.fillText('CARD '+entry.page.current+' OF '+entry.page.total,990,140);
+    c.textAlign='left';
+  }
+  c.fillStyle='#102237';c.font="600 36px 'Space Grotesk', 'DM Sans', sans-serif";
+  title.forEach((line,i)=>c.fillText(line,90,195+i*44));
+  c.strokeStyle='#e2e8f0';c.lineWidth=1.5;c.beginPath();c.moveTo(90,bodyY-30);c.lineTo(990,bodyY-30);c.stroke();
+  c.fillStyle='#1e293b';c.font="400 30px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif";
+  body.forEach((line,i)=>c.fillText(line,90,bodyY+i*52));
   shareFooter(c,1080,canvas.height-150);
   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
   if(!blob)throw Error('Writing card export failed');
@@ -96,24 +116,32 @@ async function sharePublishedWriting(entry){
   if(!entry?.published||!String(entry.body||'').trim())return;
   showDialog('WHENVANSHWRITES / SHARE A WRITING',`<section class="modal-body"><p class="eyebrow">WORDS BY VANSH BHATI · TAKE A COPY WITH YOU</p><h2 id="modal-title">${escapeHtml(entry.title)}</h2><p class="form-note">Your image includes the writing, author credit and portfolio link. Longer pieces become numbered cards.</p><p id="writing-image-status" role="status">Preparing your writing…</p><img id="writing-image-preview" alt="Shareable writing card by Vansh Bhati" style="display:block;width:100%;height:auto;border-radius:12px" hidden><div class="tool-row"><button class="back-room" id="writing-image-prev" disabled>← Previous card</button><span id="writing-image-page" aria-live="polite"></span><button class="back-room" id="writing-image-next" disabled>Next card →</button></div><div class="tool-row"><button class="modal-link" id="writing-image-share" disabled>Share this image ↗</button><button class="back-room" id="writing-image-download" disabled>Download PNG ↓</button><button class="back-room" id="writing-image-back">← Back to writing</button></div></section>`);
   const status=document.getElementById('writing-image-status'),preview=document.getElementById('writing-image-preview'),prev=document.getElementById('writing-image-prev'),next=document.getElementById('writing-image-next'),share=document.getElementById('writing-image-share'),save=document.getElementById('writing-image-download'),page=document.getElementById('writing-image-page');
-  document.getElementById('writing-image-back').onclick=()=>readWriting(entry.id);
   let url=null,index=0,blob=null,busy=false;
   function release(){if(url){URL.revokeObjectURL(url);url=null;}}
   dialog.addEventListener('close',release,{once:true});
+  document.getElementById('writing-image-back').onclick=()=>{release();readWriting(entry.id);};
   try{
     await document.fonts?.ready;
-    const measure=document.createElement('canvas').getContext('2d');measure.font='36px Space Grotesk, sans-serif';
+    const measure=document.createElement('canvas').getContext('2d');measure.font="30px 'DM Sans', 'Space Grotesk', 'Noto Sans Devanagari', 'Nirmala UI', sans-serif";
     const all=writingLines(measure,entry.body,900),pages=[];
-    for(let i=0;i<all.length;i+=12)pages.push(all.slice(i,i+12).join('\n'));
-    const filename=()=> 'whenvanshwrites-'+(String(entry.title).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,45)||'writing')+'-'+(index+1)+'.png';
+    for(let i=0;i<all.length;i+=12){
+      const chunk=all.slice(i,i+12).join('\n').replace(/^\n+|\n+$/g,'');
+      if(chunk)pages.push(chunk);
+    }
+    if(!pages.length)pages.push(entry.body);
+    const filename=()=> 'whenvanshwrites-'+(String(entry.title).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,45)||'writing')+(pages.length>1?'-card-'+(index+1):'')+'.png';
     async function render(){
       if(busy||!status.isConnected)return;busy=true;prev.disabled=next.disabled=share.disabled=save.disabled=true;
       status.textContent='Preparing card '+(index+1)+'…';
       try{
-        const result=await makeWritingCard({title:entry.title+(pages.length>1?' · '+(index+1)+' / '+pages.length:''),excerpt:pages[index]});
+        const result=await makeWritingCard({
+          title:entry.title,
+          page:pages.length>1?{current:index+1,total:pages.length}:null,
+          excerpt:pages[index]
+        });
         if(!status.isConnected){release();return;}
         blob=result;release();url=URL.createObjectURL(blob);preview.src=url;preview.hidden=false;
-        page.textContent='Card '+(index+1)+' of '+pages.length;
+        page.textContent=pages.length>1?'Card '+(index+1)+' of '+pages.length:'Card 1 of 1';
         status.textContent='Ready to share. Your words and credit stay together.';
         share.disabled=save.disabled=false;
       }catch{status.textContent='Could not create this card. Return to the writing and try again.';}
@@ -122,7 +150,7 @@ async function sharePublishedWriting(entry){
     prev.onclick=()=>{if(!busy&&index>0){index--;render();}};
     next.onclick=()=>{if(!busy&&index<pages.length-1){index++;render();}};
     save.onclick=()=>{if(blob){download(blob,filename());status.textContent='PNG downloaded with author credit and portfolio link.';}};
-    share.onclick=async()=>{if(!blob||busy)return;busy=true;share.disabled=save.disabled=prev.disabled=next.disabled=true;try{await shareImage(blob,filename(),entry.title+' — '+shareIdentity.name+' · '+shareIdentity.handle+' '+shareIdentity.url,status);}finally{busy=false;share.disabled=save.disabled=false;prev.disabled=index===0;next.disabled=index===pages.length-1;}};
+    share.onclick=async()=>{if(!blob||busy)return;busy=true;share.disabled=save.disabled=prev.disabled=next.disabled=true;try{await shareImage(blob,filename(),entry.title+(pages.length>1?' (Card '+(index+1)+'/'+pages.length+')':'')+' — '+shareIdentity.name+' · '+shareIdentity.handle+' '+shareIdentity.url,status);}finally{busy=false;share.disabled=save.disabled=false;prev.disabled=index===0;next.disabled=index===pages.length-1;}};
     await render();
   }catch{status.textContent='Could not prepare this writing. Please return and try again.';}
 }
