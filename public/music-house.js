@@ -54,15 +54,11 @@ function musicHouseEdit(){
   });
 }
 async function openMusicHouse(trigger){await musicHouseFetch();musicHouseDraw(trigger);}
-const musicHouseLink=document.createElement('button');
-musicHouseLink.type='button';musicHouseLink.setAttribute('data-music-house','');
-musicHouseLink.innerHTML='<span class="room-dot creator-dot"></span>Music House<small>two favorite songs</small><b>↗</b>';
-document.querySelector('.quick-rooms')?.appendChild(musicHouseLink);
-musicHouseLink.addEventListener('click',()=>openMusicHouse(musicHouseLink));
-const musicHouseWorld=document.createElement('button');
-musicHouseWorld.type='button';musicHouseWorld.className='music-house-landmark';
-musicHouseWorld.textContent='♫ MUSIC HOUSE';
-musicHouseWorld.style.cssText='position:absolute;left:72%;top:18%;z-index:25;background:#101828;color:#d6e8ff;border:2px solid #4b82db;border-radius:16px;padding:13px 16px;font:700 15px system-ui;cursor:pointer;box-shadow:0 8px 22px #0005';
-world.appendChild(musicHouseWorld);
-musicHouseWorld.addEventListener('click',e=>{e.stopPropagation();openMusicHouse(musicHouseWorld);});
+document.querySelectorAll('[data-music-house]').forEach(button=>{
+  button.addEventListener('click',event=>{
+    event.preventDefault();
+    event.stopPropagation();
+    openMusicHouse(button);
+  });
+});
 dialog.addEventListener('close',musicHouseStop);
