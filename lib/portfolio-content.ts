@@ -45,6 +45,16 @@ const list = (v: any, n: number, l: number) => {
 
 export function validateContent(k: string, v: any): any {
   if (!v || typeof v !== 'object') throw Error('Invalid content.');
+  if (k === 'music:house') {
+    if (!Array.isArray(v.songs) || v.songs.length !== 2) throw Error('Choose exactly two songs.');
+    return {songs:v.songs.map((song:any) => {
+      const title = str(song.title,120);
+      const url = str(song.url,300);
+      const match = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})(?:[?&#].*)?$/);
+      if (!title || !match) throw Error('Enter a title and a valid YouTube link for both songs.');
+      return {title,url:'https://www.youtube.com/watch?v='+match[1],videoId:match[1]};
+    })};
+  }
   if (k === 'profile') {
     const r: any = {};
     for (const [f, n] of Object.entries({
