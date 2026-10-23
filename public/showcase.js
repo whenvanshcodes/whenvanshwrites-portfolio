@@ -1,5 +1,5 @@
 'use strict';
-const showcaseProjects=['signal','operations','city','tickets'];
+const showcaseProjects=['signal','wvl','operations','city','tickets'];
 let activeProjectId=null;
 const originalProjectNotebook=openProject;
 openProject=function(id,trigger){activeProjectId=id;originalProjectNotebook(id,trigger);};
