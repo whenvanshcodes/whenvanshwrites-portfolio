@@ -54,7 +54,8 @@ function musicHouseEdit(){
   });
 }
 async function openMusicHouse(trigger){await musicHouseFetch();musicHouseDraw(trigger);}
-document.querySelectorAll('[data-music-house]').forEach(button=>{
+document.querySelectorAll('[data-music-house], #music-house-svg').forEach(button=>{
+  button.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openMusicHouse(button);}});
   button.addEventListener('click',event=>{
     event.preventDefault();
     event.stopPropagation();
