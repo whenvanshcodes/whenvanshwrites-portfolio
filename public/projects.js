@@ -25,8 +25,36 @@ const projects = [
     "featured": true
   },
   {
-    "id": "operations",
+    "id": "wvl",
     "number": "02",
+    "title": "WhenVanshListens",
+    "room": "founder",
+    "tag": "ANDROID + WEB PRODUCT",
+    "type": "live",
+    "summary": "A personal music ecosystem with an ad-free Android experience, a listening inbox, plans, and an interactive Sound Atlas.",
+    "stack": [
+      "Kotlin",
+      "Jetpack Compose",
+      "Next.js",
+      "Spotify API"
+    ],
+    "intro": "I built WhenVanshListens because I wanted a more intentional way to enjoy music: save recommendations, plan what to hear and visualize the artists, albums and tracks I explore. I built the mobile Android app to be ad-free, with a companion web experience.",
+    "question": "What if listening to music felt personal rather than like an endless feed—and I could see and organize my music journey?",
+    "work": [
+      "Designed and developed the Android application using Kotlin and Jetpack Compose, including an ad-free listening experience on mobile.",
+      "Built Sound Atlas: an interactive map connecting artists, albums and tracks with map and chronological history views.",
+      "Created a Music Inbox for saved recommendations, Listening Plans for intentional listening, and a full-screen player with integrated shortcuts.",
+      "Developed a companion Next.js and TypeScript web client, integrating Spotify authentication with PKCE and browser-compatible playback controls."
+    ],
+    "evidence": "Built Android and web clients with real listening workflows, Sound Atlas relationship views, an Inbox, listening plans, and music discovery. Portfolio images include Android screenshots and separately labelled desktop UI concepts.",
+    "outcome": "A working personal music project spanning native Android, web engineering and product design. The Android version was built to be ad-free; browser playback depends on Spotify service access and capabilities.",
+    "featured": true,
+    "repository": "https://github.com/whenvanshcodes/WVL",
+    "website": "https://web-fawn-five-77.vercel.app/"
+  },
+  {
+    "id": "operations",
+    "number": "03",
     "title": "Operational workflow automation",
     "room": "founder",
     "tag": "SYSTEMS & OPERATIONS",
@@ -49,7 +77,7 @@ const projects = [
   },
   {
     "id": "growth",
-    "number": "03",
+    "number": "04",
     "title": "Growth analysis & product prioritisation",
     "room": "founder",
     "tag": "BUSINESS ANALYSIS",
@@ -70,7 +98,7 @@ const projects = [
   },
   {
     "id": "billing",
-    "number": "04",
+    "number": "05",
     "title": "Billing & settlement workflows",
     "room": "founder",
     "tag": "FINANCE OPERATIONS",
@@ -92,7 +120,7 @@ const projects = [
   },
   {
     "id": "city",
-    "number": "05",
+    "number": "06",
     "title": "City Buddy",
     "room": "data",
     "tag": "CIVIC TECHNOLOGY",
@@ -116,7 +144,7 @@ const projects = [
   },
   {
     "id": "tickets",
-    "number": "06",
+    "number": "07",
     "title": "Quick Tickets",
     "room": "data",
     "tag": "FULL-STACK DEVELOPMENT",
@@ -141,7 +169,7 @@ const projects = [
   },
   {
     "id": "churn",
-    "number": "07",
+    "number": "08",
     "title": "Customer churn prediction",
     "room": "data",
     "tag": "CUSTOMER ANALYTICS",
@@ -167,7 +195,7 @@ const projects = [
   },
   {
     "id": "fraud",
-    "number": "08",
+    "number": "09",
     "title": "Credit card fraud detection",
     "room": "data",
     "tag": "MACHINE LEARNING",
@@ -192,7 +220,7 @@ const projects = [
   },
   {
     "id": "currency",
-    "number": "09",
+    "number": "10",
     "title": "Currency authenticity classification",
     "room": "data",
     "tag": "COMPUTER VISION",
@@ -214,7 +242,7 @@ const projects = [
   },
   {
     "id": "business",
-    "number": "10",
+    "number": "11",
     "title": "Operations & performance analysis",
     "room": "data",
     "tag": "BUSINESS ANALYTICS",
