@@ -4,6 +4,7 @@ let musicHouseSongs=[];
 let musicHouseActive=-1;
 let musicHouseFrame=null;
 let musicHousePaused=false;
+let musicHouseLoadPromise=null;
 function musicHouseUpdateToggle(){
   const button=document.getElementById('music-toggle');
   if(!button)return;
@@ -54,18 +55,23 @@ function musicHousePlay(i){
   musicHouseSyncSongButtons();
   musicHouseUpdateToggle();
 }
-async function musicHouseToggle(){
-  if(musicHouseActive<0){await musicHouseFetch();if(musicHouseSongs.length===2){musicHousePlay(0);return;}openMusicHouse(document.getElementById('music-toggle'));return;}
+function musicHouseToggle(){
+  if(musicHouseActive<0){if(musicHouseSongs.length===2){musicHousePlay(0);return;}openMusicHouse(document.getElementById('music-toggle'));return;}
   musicHousePaused=!musicHousePaused;
   const command=musicHousePaused?'pauseVideo':'playVideo';
   musicHouseFrame?.contentWindow?.postMessage(JSON.stringify({event:'command',func:command,args:[]}), 'https://www.youtube-nocookie.com');
   musicHouseUpdateToggle();
 }
-async function musicHouseFetch(){
-  try{
-    const r=await api('/api/portfolio');
-    musicHouseSongs=Array.isArray(r.content?.['music:house']?.songs)?r.content['music:house'].songs.slice(0,2):[];
-  }catch{musicHouseSongs=[];}
+function musicHouseFetch(){
+  if(musicHouseLoadPromise)return musicHouseLoadPromise;
+  musicHouseLoadPromise=(async()=>{
+    try{
+      const r=await api('/api/portfolio');
+      musicHouseSongs=Array.isArray(r.content?.['music:house']?.songs)?r.content['music:house'].songs.slice(0,2):[];
+    }catch{musicHouseSongs=[];}
+    const button=document.getElementById('music-toggle');if(button)button.disabled=false;
+  })();
+  return musicHouseLoadPromise;
 }
 function musicHouseDraw(trigger){
   const songHtml=musicHouseSongs.length===2?musicHouseSongs.map((song,i)=>`<article style="padding:14px;border:1px solid #78869a55;border-radius:14px;margin:12px 0"><strong>0${i+1} · ${escapeHtml(song.title)}</strong><div style="margin-top:10px"><button class="modal-link" type="button" data-music-song="${i}" aria-pressed="false">Play ▶</button></div></article>`).join(''):'<p>The owner has not set the two songs yet.</p>';
@@ -102,7 +108,8 @@ document.querySelectorAll('[data-music-house], #music-house-svg').forEach(button
   });
 });
 dialog.addEventListener('close',()=>{musicHousePlaceToggle(false);});
-document.getElementById('music-toggle')?.addEventListener('click',musicHouseToggle);
+const musicHouseButton=document.getElementById('music-toggle');if(musicHouseButton){musicHouseButton.disabled=true;musicHouseButton.addEventListener('click',musicHouseToggle);}
 window.addEventListener('lab:park',musicHouseStop);
 new MutationObserver(()=>{if(document.body.classList.contains('professional-mode')&&musicHouseActive>=0)musicHouseStop();}).observe(document.body,{attributes:true,attributeFilter:['class']});
 musicHouseUpdateToggle();
+void musicHouseFetch();
