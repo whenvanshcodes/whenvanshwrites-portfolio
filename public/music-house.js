@@ -103,5 +103,6 @@ document.querySelectorAll('[data-music-house], #music-house-svg').forEach(button
 });
 dialog.addEventListener('close',()=>{musicHousePlaceToggle(false);});
 document.getElementById('music-toggle')?.addEventListener('click',musicHouseToggle);
+window.addEventListener('lab:park',musicHouseStop);
 new MutationObserver(()=>{if(document.body.classList.contains('professional-mode')&&musicHouseActive>=0)musicHouseStop();}).observe(document.body,{attributes:true,attributeFilter:['class']});
 musicHouseUpdateToggle();
