@@ -63,6 +63,7 @@ body.night .wvl-player-card{background:linear-gradient(150deg,#0b332d 0%,#0d2026
 .wvl-player-track{display:grid;gap:7px;min-width:0}
 .wvl-player-track strong{font:600 17px/1.25 var(--font);overflow-wrap:anywhere}
 .wvl-player-track strong{color:#f5fbf6}
+body #portfolio-root dialog .wvl-player-track strong{color:#f5fbf6}
 .wvl-player-track span{font:10px var(--font);color:#b6cfbf}
 .wvl-player-wave{height:22px;display:flex;align-items:center;gap:4px;margin:14px 0 11px;overflow:hidden}
 .wvl-player-wave i{display:block;width:3px;height:var(--bar,45%);min-height:4px;border-radius:4px;background:var(--wvl-accent);opacity:.8;transform-origin:center}
