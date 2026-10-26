@@ -30,3 +30,11 @@ dialog{position:fixed;inset:0;margin:auto;max-width:calc(100vw - 32px);overflow-
 .resume-landmark .landmark-plaque{top:125px}
 .writing-landmark .landmark-plaque{margin-left:-15px}
 .cat-hotspot{left:830px;top:660px;width:50px;height:55px}.message-hotspot{left:852px;top:802px;width:47px;height:58px}.mailbox-hotspot{left:905px;top:553px;width:56px;height:80px}
+
+.music-house-landmark{left:1160px;top:760px;width:140px;height:130px;padding:0;display:block;border-radius:14px;z-index:6}
+.music-house-landmark .music-village-house{position:absolute;inset:0;width:140px;height:130px;overflow:visible;filter:drop-shadow(0 5px 4px #536b3920);transition:transform .22s}
+.music-house-landmark .landmark-plaque{position:absolute;left:50%;top:137px;transform:translateX(-50%);width:200px;min-width:200px;max-width:200px;padding:10px;gap:7px}
+.music-house-landmark .landmark-plaque>span{font-size:15px;line-height:1.2}
+.music-house-landmark .landmark-plaque small{font-size:6px;letter-spacing:.45px;line-height:1.5}
+.music-house-landmark:is(:hover,:focus-visible) .music-village-house{transform:translateY(-4px)}
+.music-house-landmark:is(:hover,:focus-visible) .landmark-plaque{transform:translateX(-50%) translateY(-4px)}
