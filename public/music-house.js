@@ -13,6 +13,14 @@ function musicHouseUpdateToggle(){
   button.setAttribute('title',musicHousePaused?'Resume music':'Pause music');
   button.setAttribute('aria-pressed',String(musicHousePaused));
 }
+function musicHousePlaceToggle(inDialog){
+  const button=document.getElementById('music-toggle');
+  if(!button)return;
+  button.classList.toggle('music-toggle-in-dialog',inDialog);
+  if(inDialog){dialog.appendChild(button);return;}
+  const actions=document.querySelector('.top-actions'),theme=document.getElementById('theme');
+  if(actions&&theme)actions.insertBefore(button,theme);
+}
 function musicHouseStop(){
   musicHouseActive=-1;
   musicHousePaused=false;
@@ -57,6 +65,8 @@ function musicHouseDraw(trigger){
   const songHtml=musicHouseSongs.length===2?musicHouseSongs.map((song,i)=>`<article style="padding:14px;border:1px solid #78869a55;border-radius:14px;margin:12px 0"><strong>0${i+1} · ${escapeHtml(song.title)}</strong><div style="margin-top:10px"><button class="modal-link" type="button" data-music-song="${i}" aria-pressed="false">Play ▶</button></div></article>`).join(''):'<p>The owner has not set the two songs yet.</p>';
   const admin=typeof ownerMode!=='undefined'&&ownerMode?'<button class="back-room" id="music-house-admin">Change my two songs</button>':'';
   showDialog('MUSIC VILLAGE / TWO FAVORITES',`<section class="modal-body"><p class="eyebrow">WHENVANSHLISTENS · THE VILLAGE</p><h2 id="modal-title">Music Village</h2><p class="modal-intro">Two songs selected by Vansh. Pick either one to listen. Music never starts automatically.</p>${songHtml}<div id="music-house-player" style="max-width:560px"></div><button type="button" class="back-room" id="music-house-off">Turn music off ■</button> ${admin}<p class="form-note">YouTube playback requires an internet connection; some videos may not allow embedding.</p></section>`,trigger);
+  const toggle=document.getElementById('music-toggle');if(toggle)toggle.disabled=false;
+  musicHousePlaceToggle(true);
   content.querySelectorAll('[data-music-song]').forEach(b=>b.addEventListener('click',()=>musicHousePlay(Number(b.dataset.musicSong))));
   document.getElementById('music-house-off').addEventListener('click',musicHouseStop);
   document.getElementById('music-house-admin')?.addEventListener('click',musicHouseEdit);
@@ -65,6 +75,7 @@ function musicHouseEdit(){
   if(typeof ownerMode==='undefined'||!ownerMode)return;
   musicHouseStop();
   showDialog('OWNER STUDIO / MUSIC VILLAGE',`<section class="modal-body"><h2 id="modal-title">Choose exactly two songs</h2><p class="modal-intro">Only you can change these tracks. Visitors can only play, switch or stop them.</p><form id="music-house-edit">${[0,1].map(i=>`<fieldset style="border:1px solid #78869a55;border-radius:12px;padding:14px;margin-bottom:14px"><legend>Song ${i+1}</legend><label class="field"><span>Song title</span><input name="title${i}" required maxlength="120" value="${escapeHtml(musicHouseSongs[i]?.title||'')}"></label><label class="field"><span>YouTube video URL</span><input name="url${i}" required maxlength="300" value="${escapeHtml(musicHouseSongs[i]?.url||'')}" placeholder="https://www.youtube.com/watch?v=..."></label></fieldset>`).join('')}<p role="alert" id="music-house-error"></p><button class="modal-link" type="submit">Save two songs</button></form></section>`);
+  const toggle=document.getElementById('music-toggle');if(toggle)toggle.disabled=true;
   document.getElementById('music-house-edit').addEventListener('submit',async e=>{
     e.preventDefault();const form=e.currentTarget,btn=form.querySelector('button[type=submit]');btn.disabled=true;
     const songs=[0,1].map(i=>({title:form.elements['title'+i].value,url:form.elements['url'+i].value}));
@@ -83,6 +94,6 @@ document.querySelectorAll('[data-music-house], #music-house-svg').forEach(button
     openMusicHouse(button);
   });
 });
-dialog.addEventListener('close',musicHouseStop);
+dialog.addEventListener('close',()=>{musicHouseStop();musicHousePlaceToggle(false);});
 document.getElementById('music-toggle')?.addEventListener('click',musicHouseToggle);
 musicHouseUpdateToggle();
