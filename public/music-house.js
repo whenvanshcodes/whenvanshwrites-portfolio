@@ -3,27 +3,48 @@
 let musicHouseSongs=[];
 let musicHouseActive=-1;
 let musicHouseFrame=null;
+let musicHousePaused=false;
+function musicHouseUpdateToggle(){
+  const button=document.getElementById('music-toggle');
+  if(!button)return;
+  if(musicHouseActive<0){button.textContent='♫';button.setAttribute('aria-label','Open Music House');button.setAttribute('title','Open Music House');button.setAttribute('aria-pressed','false');return;}
+  button.textContent=musicHousePaused?'▶':'Ⅱ';
+  button.setAttribute('aria-label',musicHousePaused?'Resume music':'Pause music');
+  button.setAttribute('title',musicHousePaused?'Resume music':'Pause music');
+  button.setAttribute('aria-pressed',String(musicHousePaused));
+}
 function musicHouseStop(){
   musicHouseActive=-1;
+  musicHousePaused=false;
   if(musicHouseFrame){musicHouseFrame.remove();musicHouseFrame=null;}
   document.querySelectorAll('[data-music-song]').forEach(b=>{b.textContent='Play ▶';b.setAttribute('aria-pressed','false');});
+  musicHouseUpdateToggle();
 }
 function musicHousePlay(i){
   if(!musicHouseSongs[i])return;
   if(musicHouseActive===i){musicHouseStop();return;}
   musicHouseStop();
   musicHouseActive=i;
+  musicHousePaused=false;
   const host=document.getElementById('music-house-player');
-  if(!host)return;
+  if(!host){musicHouseActive=-1;musicHouseUpdateToggle();return;}
   const iframe=document.createElement('iframe');
   iframe.title='YouTube music: '+musicHouseSongs[i].title;
   iframe.width='100%';iframe.height='220';iframe.loading='eager';
   iframe.allow='autoplay; encrypted-media; picture-in-picture';
   iframe.referrerPolicy='strict-origin-when-cross-origin';
-  iframe.src='https://www.youtube-nocookie.com/embed/'+musicHouseSongs[i].videoId+'?autoplay=1&playsinline=1&rel=0';
+  iframe.src='https://www.youtube-nocookie.com/embed/'+musicHouseSongs[i].videoId+'?autoplay=1&playsinline=1&rel=0&enablejsapi=1&origin='+encodeURIComponent(location.origin);
   iframe.style.border='0';iframe.style.borderRadius='14px';
   host.appendChild(iframe);musicHouseFrame=iframe;
   document.querySelectorAll('[data-music-song]').forEach((b,j)=>{b.textContent=j===i?'Stop ■':'Play ▶';b.setAttribute('aria-pressed',String(j===i));});
+  musicHouseUpdateToggle();
+}
+function musicHouseToggle(){
+  if(musicHouseActive<0){openMusicHouse(document.getElementById('music-toggle'));return;}
+  musicHousePaused=!musicHousePaused;
+  const command=musicHousePaused?'pauseVideo':'playVideo';
+  musicHouseFrame?.contentWindow?.postMessage(JSON.stringify({event:'command',func:command,args:[]}), 'https://www.youtube-nocookie.com');
+  musicHouseUpdateToggle();
 }
 async function musicHouseFetch(){
   try{
@@ -63,3 +84,5 @@ document.querySelectorAll('[data-music-house], #music-house-svg').forEach(button
   });
 });
 dialog.addEventListener('close',musicHouseStop);
+document.getElementById('music-toggle')?.addEventListener('click',musicHouseToggle);
+musicHouseUpdateToggle();
