@@ -106,7 +106,7 @@ body.night .profile-music-copy small{color:#aeb9a7}
 body.night .profile-music-controls button{border-color:#3b4b41;background:#22322b;color:#dbe5d5}
 body.night .profile-music-controls button[data-music-player-toggle]{border-color:#829078;background:#829078;color:#fff}
 body.professional-mode #profile-music-player{display:none}
-.music-house-landmark{left:890px;top:620px;width:120px;height:110px}
+.music-house-landmark{left:660px;top:560px;width:120px;height:110px}
 .music-house-landmark .music-village-house{width:120px;height:110px;filter:drop-shadow(0 4px 4px #536b3914)}
 .music-house-landmark .landmark-plaque{top:115px;width:160px;min-width:160px;max-width:160px}
-@media(max-width:520px){.music-house-landmark{left:890px;top:620px;width:120px;height:110px}.profile-music-player{margin-left:16px;margin-right:16px}}
+@media(max-width:520px){.music-house-landmark{left:660px;top:560px;width:120px;height:110px}.profile-music-player{margin-left:16px;margin-right:16px}}
