@@ -85,3 +85,28 @@ body #portfolio-root dialog .wvl-player-track strong{color:#f5fbf6}
 .music-prompt-actions .back-room{min-height:44px;padding:9px 16px;border:1px solid var(--fe-line);border-radius:999px;background:var(--fe-raised);color:var(--fe-ink)}
 @media(max-width:520px){.wvl-player-card{padding:13px;border-radius:15px}.wvl-player-mainrow{grid-template-columns:82px minmax(0,1fr);gap:12px}.wvl-player-art{width:82px}.wvl-player-track strong{font-size:14px}.wvl-player-controls{gap:20px}.music-song-card{padding:11px}.music-song-card strong{font-size:12px}.music-house-landmark{left:1220px;top:710px}}
 @media(prefers-reduced-motion:reduce){.wvl-player-card.is-playing .wvl-player-wave i{animation:none}}
+
+/* A quiet, always-available WVL-inspired mini player above the portrait. */
+.profile-music-player{display:flex;flex-direction:column;gap:8px;margin:12px 20px 2px;padding:9px 11px;border:1px solid #d8dfd0;border-radius:12px;background:#edf0e6;color:#465545;box-shadow:0 4px 14px #56614812;flex:none}
+.profile-music-player[hidden]{display:none}
+.profile-music-top{display:grid;grid-template-columns:48px minmax(0,1fr);align-items:center;gap:10px}
+.profile-music-art{display:block;width:48px;height:48px;object-fit:cover;border-radius:8px;background:#dfe5d8}
+.profile-music-copy{display:grid;min-width:0;gap:2px}
+.profile-music-status{font:7px var(--mono);letter-spacing:.65px;color:#829078}
+.profile-music-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 12px/1.25 var(--font);color:#465545}
+.profile-music-copy small{font:8px var(--font);color:#7d8877}
+.profile-music-controls{display:flex;justify-content:flex-end;align-items:center;gap:5px}
+.profile-music-controls button{width:27px;height:25px;border:1px solid #d5dccd;border-radius:7px;background:#f8f8f1;color:#62755c;font-size:12px;line-height:1}
+.profile-music-controls button[data-music-player-toggle]{width:31px;background:#829078;border-color:#829078;color:#fff}
+body.night .profile-music-player{border-color:#34443c;background:#192722;color:#e5ece1;box-shadow:0 5px 16px #0003}
+body.night .profile-music-art{background:#2d3d35}
+body.night .profile-music-status{color:#acbea3}
+body.night .profile-music-title{color:#edf2e7}
+body.night .profile-music-copy small{color:#aeb9a7}
+body.night .profile-music-controls button{border-color:#3b4b41;background:#22322b;color:#dbe5d5}
+body.night .profile-music-controls button[data-music-player-toggle]{border-color:#829078;background:#829078;color:#fff}
+body.professional-mode #profile-music-player{display:none}
+.music-house-landmark{left:890px;top:620px;width:120px;height:110px}
+.music-house-landmark .music-village-house{width:120px;height:110px;filter:drop-shadow(0 4px 4px #536b3914)}
+.music-house-landmark .landmark-plaque{top:115px;width:160px;min-width:160px;max-width:160px}
+@media(max-width:520px){.music-house-landmark{left:890px;top:620px;width:120px;height:110px}.profile-music-player{margin-left:16px;margin-right:16px}}

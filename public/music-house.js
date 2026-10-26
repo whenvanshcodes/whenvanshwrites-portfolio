@@ -43,17 +43,28 @@ function musicHousePlayerMarkup(compact=false){
   const i=musicHouseActive>=0?musicHouseActive:0,song=musicHouseSongs[i];
   const playerState=musicHouseActive<0?'READY WHEN YOU ARE':musicHousePaused?'PAUSED':'NOW PLAYING';
   const controls=compact?'':`<div class="wvl-player-controls"><button type="button" data-music-previous aria-label="Play previous song">⏮</button><button type="button" class="wvl-player-main" data-music-player-toggle aria-label="${musicHouseActive>=0&&!musicHousePaused?'Pause music':'Play music'}">${musicHouseActive>=0&&!musicHousePaused?'Ⅱ':'▶'}</button><button type="button" data-music-next aria-label="Play next song">⏭</button></div>`;
-  return `<section class="wvl-player-card${compact?' wvl-player-compact':''}" aria-label="WhenVanshListens inspired music player"><div class="wvl-player-topline"><span>WHENVANSHLISTENS</span><span id="music-player-status">${playerState}</span></div><div class="wvl-player-mainrow"><div class="wvl-player-art"><img id="music-player-art" src="https://img.youtube.com/vi/${encodeURIComponent(song.videoId)}/hqdefault.jpg" alt="" loading="lazy"></div><div class="wvl-player-track"><strong id="music-player-title">${escapeHtml(song.title)}</strong><span>Music Village · Two song picks</span></div></div><div class="wvl-player-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>${controls}<div class="wvl-player-credit">Player inspired by my project <a href="https://github.com/whenvanshcodes/WVL" target="_blank" rel="noopener noreferrer">WhenVanshListens (WVL) ↗</a></div></section>`;
+  return `<section class="wvl-player-card${compact?' wvl-player-compact':''}" aria-label="WhenVanshListens inspired music player"><div class="wvl-player-topline"><span>WHENVANSHLISTENS</span><span class="music-player-status">${playerState}</span></div><div class="wvl-player-mainrow"><div class="wvl-player-art"><img class="music-player-art" src="https://img.youtube.com/vi/${encodeURIComponent(song.videoId)}/hqdefault.jpg" alt="" loading="lazy"></div><div class="wvl-player-track"><strong class="music-player-title">${escapeHtml(song.title)}</strong><span>Music Village · Two song picks</span></div></div><div class="wvl-player-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>${controls}<div class="wvl-player-credit">Player inspired by my project <a href="https://github.com/whenvanshcodes/WVL" target="_blank" rel="noopener noreferrer">WhenVanshListens (WVL) ↗</a></div></section>`;
+}
+function musicHouseRenderProfilePlayer(){
+  const host=document.getElementById('profile-music-player');
+  if(!host)return;
+  if(musicHouseSongs.length!==2){host.hidden=true;host.innerHTML='';return;}
+  const i=musicHouseActive>=0?musicHouseActive:0,song=musicHouseSongs[i];
+  host.hidden=false;
+  host.innerHTML=`<div class="profile-music-top"><img class="profile-music-art" src="https://img.youtube.com/vi/${encodeURIComponent(song.videoId)}/mqdefault.jpg" alt=""><div class="profile-music-copy"><span class="profile-music-status">${musicHouseActive<0?'READY WHEN YOU ARE':musicHousePaused?'PAUSED':'NOW PLAYING'}</span><strong class="profile-music-title">${escapeHtml(song.title)}</strong><small>Inspired by my project WVL</small></div></div><div class="profile-music-controls"><button type="button" data-music-previous aria-label="Play previous song">⏮</button><button type="button" data-music-player-toggle aria-label="${musicHouseActive>=0&&!musicHousePaused?'Pause music':'Play music'}">${musicHouseActive>=0&&!musicHousePaused?'Ⅱ':'▶'}</button><button type="button" data-music-next aria-label="Play next song">⏭</button></div>`;
+  host.querySelector('[data-music-player-toggle]').addEventListener('click',musicHouseToggle);
+  host.querySelector('[data-music-previous]').addEventListener('click',()=>musicHousePlay((Math.max(0,musicHouseActive>=0?musicHouseActive:0)+1)%2));
+  host.querySelector('[data-music-next]').addEventListener('click',()=>musicHousePlay((Math.max(0,musicHouseActive>=0?musicHouseActive:0)+1)%2));
 }
 function musicHouseSyncPlayer(){
   if(musicHouseSongs.length!==2)return;
   const i=musicHouseActive>=0?musicHouseActive:0,song=musicHouseSongs[i];
-  const title=document.getElementById('music-player-title'),art=document.getElementById('music-player-art'),play=document.querySelector('[data-music-player-toggle]'),card=document.querySelector('.wvl-player-card'),status=document.getElementById('music-player-status');
-  if(card)card.classList.toggle('is-playing',musicHouseActive>=0&&!musicHousePaused);
-  if(status)status.textContent=musicHouseActive<0?'READY WHEN YOU ARE':musicHousePaused?'PAUSED':'NOW PLAYING';
-  if(title)title.textContent=song.title;
-  if(art)art.src='https://img.youtube.com/vi/'+encodeURIComponent(song.videoId)+'/hqdefault.jpg';
-  if(play){const playing=musicHouseActive>=0&&!musicHousePaused;play.textContent=playing?'Ⅱ':'▶';play.setAttribute('aria-label',playing?'Pause music':'Play music');play.setAttribute('aria-pressed',String(playing));}
+  const playing=musicHouseActive>=0&&!musicHousePaused,statusText=musicHouseActive<0?'READY WHEN YOU ARE':musicHousePaused?'PAUSED':'NOW PLAYING';
+  document.querySelectorAll('.wvl-player-card').forEach(card=>card.classList.toggle('is-playing',playing));
+  document.querySelectorAll('.music-player-status,.profile-music-status').forEach(el=>el.textContent=statusText);
+  document.querySelectorAll('.music-player-title,.profile-music-title').forEach(el=>el.textContent=song.title);
+  document.querySelectorAll('.music-player-art,.profile-music-art').forEach(el=>el.src='https://img.youtube.com/vi/'+encodeURIComponent(song.videoId)+'/hqdefault.jpg');
+  document.querySelectorAll('[data-music-player-toggle]').forEach(button=>{button.textContent=playing?'Ⅱ':'▶';button.setAttribute('aria-label',playing?'Pause music':'Play music');button.setAttribute('aria-pressed',String(playing));});
 }
 function musicHousePlay(i){
   if(!musicHouseSongs[i])return;
@@ -89,6 +100,7 @@ function musicHouseFetch(){
       const r=await api('/api/portfolio');
       musicHouseSongs=Array.isArray(r.content?.['music:house']?.songs)?r.content['music:house'].songs.slice(0,2):[];
     }catch{musicHouseSongs=[];}
+    musicHouseRenderProfilePlayer();
     const button=document.getElementById('music-toggle');if(button)button.disabled=false;
   })();
   return musicHouseLoadPromise;
@@ -97,7 +109,7 @@ function musicHouseDraw(trigger){
   dialog.classList.remove('music-prompt-dialog');
   const songHtml=musicHouseSongs.length===2?musicHouseSongs.map((song,i)=>`<article class="music-song-card"><strong><span>0${i+1}</span>${escapeHtml(song.title)}</strong><button class="music-song-action" type="button" data-music-song="${i}" aria-pressed="false">Play ▶</button></article>`).join(''):'<p>The owner has not set the two songs yet.</p>';
   const admin=typeof ownerMode!=='undefined'&&ownerMode?'<button class="back-room" id="music-house-admin">Change my two songs</button>':'';
-  showDialog('MUSIC VILLAGE / TWO FAVORITES',`<section class="modal-body music-house-content"><p class="eyebrow">WHENVANSHLISTENS · THE VILLAGE</p><h2 id="modal-title">Music Village</h2><p class="modal-intro">Two songs selected by Vansh. Pick either one to listen.</p>${musicHousePlayerMarkup()}<div class="music-song-list">${songHtml}</div><button type="button" class="back-room" id="music-house-off">Turn music off ■</button> ${admin}<p class="form-note">YouTube playback needs an internet connection. Some videos may not allow embedding.</p></section>`,trigger);
+  showDialog('MUSIC VILLAGE / TWO FAVORITES',`<section class="modal-body music-house-content"><p class="eyebrow">WHENVANSHLISTENS · THE VILLAGE</p><h2 id="modal-title">Music Village</h2>${musicHousePlayerMarkup()}<div class="music-song-list">${songHtml}</div><button type="button" class="back-room" id="music-house-off">Turn music off ■</button> ${admin}<p class="form-note">YouTube playback needs an internet connection. Some videos may not allow embedding.</p></section>`,trigger);
   const toggle=document.getElementById('music-toggle');if(toggle)toggle.disabled=false;
   musicHousePlaceToggle(true);
   musicHouseSyncSongButtons();
@@ -120,7 +132,7 @@ function musicHouseEdit(){
     const songs=[0,1].map(i=>({title:form.elements['title'+i].value,url:form.elements['url'+i].value}));
     try{
       const result=await api('/api/portfolio',apiJson('PUT',{key:'music:house',value:{songs}}));
-      musicHouseSongs=result.value.songs;musicHouseDraw();toast('Your two songs are saved.');
+      musicHouseSongs=result.value.songs;musicHouseRenderProfilePlayer();musicHouseDraw();toast('Your two songs are saved.');
     }catch(err){document.getElementById('music-house-error').textContent=err.message;btn.disabled=false;}
   });
 }
