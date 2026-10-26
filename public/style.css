@@ -40,3 +40,6 @@ dialog{position:fixed;inset:0;margin:auto;max-width:calc(100vw - 32px);overflow-
 .music-house-landmark:is(:hover,:focus-visible) .landmark-plaque{transform:translateX(-50%) translateY(-4px)}
 .music-toggle-in-dialog{position:fixed;top:35px;right:145px;z-index:1002;pointer-events:auto}
 .music-toggle-in-dialog:disabled{opacity:.5;cursor:not-allowed}
+/* The selected YouTube track stays alive outside Music Village while visitors explore. */
+.music-player-host{position:fixed;left:-10000px;top:0;width:200px;height:200px;overflow:hidden;opacity:0;pointer-events:none;z-index:-1}
+body.professional-mode #music-toggle{display:none}

@@ -7,7 +7,7 @@ let musicHousePaused=false;
 function musicHouseUpdateToggle(){
   const button=document.getElementById('music-toggle');
   if(!button)return;
-  if(musicHouseActive<0){button.textContent='♫';button.setAttribute('aria-label','Open Music Village');button.setAttribute('title','Open Music Village');button.setAttribute('aria-pressed','false');return;}
+  if(musicHouseActive<0){button.textContent='♫';button.setAttribute('aria-label','Play music');button.setAttribute('title','Play music');button.setAttribute('aria-pressed','false');return;}
   button.textContent=musicHousePaused?'▶':'Ⅱ';
   button.setAttribute('aria-label',musicHousePaused?'Resume music':'Pause music');
   button.setAttribute('title',musicHousePaused?'Resume music':'Pause music');
@@ -28,27 +28,34 @@ function musicHouseStop(){
   document.querySelectorAll('[data-music-song]').forEach(b=>{b.textContent='Play ▶';b.setAttribute('aria-pressed','false');});
   musicHouseUpdateToggle();
 }
+function musicHousePlayerHost(){
+  let host=document.getElementById('music-house-player');
+  if(!host){host=document.createElement('div');host.id='music-house-player';host.className='music-player-host';host.setAttribute('aria-hidden','true');document.body.appendChild(host);}
+  return host;
+}
+function musicHouseSyncSongButtons(){
+  document.querySelectorAll('[data-music-song]').forEach(b=>{const i=Number(b.dataset.musicSong),playing=i===musicHouseActive;b.textContent=playing?'Stop ■':'Play ▶';b.setAttribute('aria-pressed',String(playing));});
+}
 function musicHousePlay(i){
   if(!musicHouseSongs[i])return;
   if(musicHouseActive===i){musicHouseStop();return;}
   musicHouseStop();
   musicHouseActive=i;
   musicHousePaused=false;
-  const host=document.getElementById('music-house-player');
-  if(!host){musicHouseActive=-1;musicHouseUpdateToggle();return;}
+  const host=musicHousePlayerHost();
   const iframe=document.createElement('iframe');
   iframe.title='YouTube music: '+musicHouseSongs[i].title;
-  iframe.width='100%';iframe.height='220';iframe.loading='eager';
+  iframe.width='200';iframe.height='200';iframe.loading='eager';
   iframe.allow='autoplay; encrypted-media; picture-in-picture';
   iframe.referrerPolicy='strict-origin-when-cross-origin';
-  iframe.src='https://www.youtube-nocookie.com/embed/'+musicHouseSongs[i].videoId+'?autoplay=1&playsinline=1&rel=0&enablejsapi=1&origin='+encodeURIComponent(location.origin);
-  iframe.style.border='0';iframe.style.borderRadius='14px';
+  iframe.src='https://www.youtube-nocookie.com/embed/'+musicHouseSongs[i].videoId+'?autoplay=1&controls=0&playsinline=1&rel=0&enablejsapi=1&origin='+encodeURIComponent(location.origin);
+  iframe.style.border='0';iframe.tabIndex=-1;
   host.appendChild(iframe);musicHouseFrame=iframe;
-  document.querySelectorAll('[data-music-song]').forEach((b,j)=>{b.textContent=j===i?'Stop ■':'Play ▶';b.setAttribute('aria-pressed',String(j===i));});
+  musicHouseSyncSongButtons();
   musicHouseUpdateToggle();
 }
-function musicHouseToggle(){
-  if(musicHouseActive<0){openMusicHouse(document.getElementById('music-toggle'));return;}
+async function musicHouseToggle(){
+  if(musicHouseActive<0){await musicHouseFetch();if(musicHouseSongs.length===2){musicHousePlay(0);return;}openMusicHouse(document.getElementById('music-toggle'));return;}
   musicHousePaused=!musicHousePaused;
   const command=musicHousePaused?'pauseVideo':'playVideo';
   musicHouseFrame?.contentWindow?.postMessage(JSON.stringify({event:'command',func:command,args:[]}), 'https://www.youtube-nocookie.com');
@@ -61,12 +68,12 @@ async function musicHouseFetch(){
   }catch{musicHouseSongs=[];}
 }
 function musicHouseDraw(trigger){
-  musicHouseStop();
   const songHtml=musicHouseSongs.length===2?musicHouseSongs.map((song,i)=>`<article style="padding:14px;border:1px solid #78869a55;border-radius:14px;margin:12px 0"><strong>0${i+1} · ${escapeHtml(song.title)}</strong><div style="margin-top:10px"><button class="modal-link" type="button" data-music-song="${i}" aria-pressed="false">Play ▶</button></div></article>`).join(''):'<p>The owner has not set the two songs yet.</p>';
   const admin=typeof ownerMode!=='undefined'&&ownerMode?'<button class="back-room" id="music-house-admin">Change my two songs</button>':'';
-  showDialog('MUSIC VILLAGE / TWO FAVORITES',`<section class="modal-body"><p class="eyebrow">WHENVANSHLISTENS · THE VILLAGE</p><h2 id="modal-title">Music Village</h2><p class="modal-intro">Two songs selected by Vansh. Pick either one to listen. Music never starts automatically.</p>${songHtml}<div id="music-house-player" style="max-width:560px"></div><button type="button" class="back-room" id="music-house-off">Turn music off ■</button> ${admin}<p class="form-note">YouTube playback requires an internet connection; some videos may not allow embedding.</p></section>`,trigger);
+  showDialog('MUSIC VILLAGE / TWO FAVORITES',`<section class="modal-body"><p class="eyebrow">WHENVANSHLISTENS · THE VILLAGE</p><h2 id="modal-title">Music Village</h2><p class="modal-intro">Click the music button up top to listen in the background, or pick a favorite here. Music never starts automatically.</p>${songHtml}<button type="button" class="back-room" id="music-house-off">Turn music off ■</button> ${admin}<p class="form-note">YouTube playback requires an internet connection; some videos may not allow embedding.</p></section>`,trigger);
   const toggle=document.getElementById('music-toggle');if(toggle)toggle.disabled=false;
   musicHousePlaceToggle(true);
+  musicHouseSyncSongButtons();
   content.querySelectorAll('[data-music-song]').forEach(b=>b.addEventListener('click',()=>musicHousePlay(Number(b.dataset.musicSong))));
   document.getElementById('music-house-off').addEventListener('click',musicHouseStop);
   document.getElementById('music-house-admin')?.addEventListener('click',musicHouseEdit);
@@ -94,6 +101,7 @@ document.querySelectorAll('[data-music-house], #music-house-svg').forEach(button
     openMusicHouse(button);
   });
 });
-dialog.addEventListener('close',()=>{musicHouseStop();musicHousePlaceToggle(false);});
+dialog.addEventListener('close',()=>{musicHousePlaceToggle(false);});
 document.getElementById('music-toggle')?.addEventListener('click',musicHouseToggle);
+new MutationObserver(()=>{if(document.body.classList.contains('professional-mode')&&musicHouseActive>=0)musicHouseStop();}).observe(document.body,{attributes:true,attributeFilter:['class']});
 musicHouseUpdateToggle();
